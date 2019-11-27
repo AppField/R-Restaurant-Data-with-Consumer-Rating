@@ -4,3 +4,67 @@ author: "Roman Mühlfeldner and Ana Stanusic"
 output: html_notebook
 ---
 
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+# Datenaufbereitung [10%]
+
+Daten einlesen:
+
+```{r}
+accept <- read.csv('./data/chefmozaccepts.csv')
+cuisine <- read.csv('./data/chefmozcuisine.csv')
+hours <- read.csv('./data/chefmozhours4.csv')
+parking <- read.csv('./data/chefmozparking.csv')
+geoplaces <- read.csv('./data/geoplaces2.csv')
+rating <- read.csv('./data/rating_final.csv')
+usercuisine <- read.csv('./data/usercuisine.csv')
+userpayment <- read.csv('./data/userpayment.csv')
+userprofile <- read.csv('./data/userprofile.csv')
+```
+
+
+```{r}
+head(accept)
+```
+```{r}
+head(cuisine)
+```
+```{r}
+head(hours)
+```
+```{r}
+head(parking)
+```
+```{r}
+head(geoplaces)
+```
+```{r}
+head(rating)
+```
+```{r}
+head(usercuisine)
+```
+```{r}
+head(userpayment)
+```
+```{r}
+head(userprofile)
+```
+
+
+
+
+
+
+# Explorative Datenanalyse, speziell Visualisierung [20%]
+
+# Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
+
+# Deployment des besten Modells mittels Web Service [10%]
+
+# Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
+
+# Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
