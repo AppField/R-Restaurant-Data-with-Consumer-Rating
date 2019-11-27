@@ -1,0 +1,6 @@
+---
+title: "Restaurant Data with Consumer Rating"
+author: "Roman Mühlfeldner and Ana Stanusic"
+output: html_notebook
+---
+
