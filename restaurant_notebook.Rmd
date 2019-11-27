@@ -27,39 +27,45 @@ userprofile <- read.csv('./data/userprofile.csv')
 
 
 ```{r}
-head(accept)
+dim(accept)
+summary(accept)
 ```
 ```{r}
-head(cuisine)
+dim(cuisine)
+summary(cuisine)
 ```
 ```{r}
-head(hours)
+dim(hours)
+summary(hours)
 ```
 ```{r}
-head(parking)
+dim(parking)
+summary(parking)
 ```
 ```{r}
-head(geoplaces)
+dim(geoplaces)
+summary(geoplaces)
 ```
 ```{r}
-head(rating)
+dim(rating)
+summary(rating)
 ```
 ```{r}
-head(usercuisine)
+dim(usercuisine)
+summary(usercuisine)
 ```
 ```{r}
-head(userpayment)
-```
-```{r}
-head(userprofile)
+dim(userpayment)
+summary(userpayment)
 ```
 
-
-
-
-
+```{r}
+dim(userprofile)
+summary(userprofile)
+```
 
 # Explorative Datenanalyse, speziell Visualisierung [20%]
+
 
 # Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
 
