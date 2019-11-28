@@ -17,7 +17,8 @@ Daten einlesen:
 
 ```{r}
 accept <- read.csv('./data/chefmozaccepts.csv')
-ephours <- read.csv('./data/chefmozhours4.csv',)
+cuisine <- read.csv('./data/chefmozcuisine.csv')
+hours <- read.csv('./data/chefmozhours4.csv')
 parking <- read.csv('./data/chefmozparking.csv')
 geoplaces <- read.csv('./data/geoplaces2.csv', na.strings = "?")
 rating <- read.csv('./data/rating_final.csv')
