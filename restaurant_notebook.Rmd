@@ -7,6 +7,8 @@ output: html_notebook
 ```{r}
 library(tidyverse)
 library(ggplot2)
+library(ggmosaic)
+library(ggrepel)
 ```
 
 # Datenaufbereitung [10%]
@@ -15,53 +17,76 @@ Daten einlesen:
 
 ```{r}
 accept <- read.csv('./data/chefmozaccepts.csv')
-cuisine <- read.csv('./data/chefmozcuisine.csv')
-hours <- read.csv('./data/chefmozhours4.csv')
+ephours <- read.csv('./data/chefmozhours4.csv',)
 parking <- read.csv('./data/chefmozparking.csv')
-geoplaces <- read.csv('./data/geoplaces2.csv')
+geoplaces <- read.csv('./data/geoplaces2.csv', na.strings = "?")
 rating <- read.csv('./data/rating_final.csv')
 usercuisine <- read.csv('./data/usercuisine.csv')
 userpayment <- read.csv('./data/userpayment.csv')
-userprofile <- read.csv('./data/userprofile.csv')
+userprofile <- read.csv('./data/userprofile.csv', na.strings = "?")
 ```
 
 
 ```{r}
+head(accept)
 dim(accept)
 summary(accept)
+ggplot(accept, aes(x = Rpayment, fill=Rpayment)) + geom_bar()
 ```
 ```{r}
+head(cuisine)
 dim(cuisine)
 summary(cuisine)
+ggplot(cuisine, aes(x = Rcuisine, fill=Rcuisine)) + geom_bar()
 ```
+
 ```{r}
+head(hours)
 dim(hours)
 summary(hours)
+ggplot(hours, aes(x = days, fill=hours)) + geom_bar()
 ```
+
 ```{r}
+head(parking)
 dim(parking)
 summary(parking)
+ggplot(parking, aes(x = parking_lot, fill=parking_lot)) + geom_bar()
 ```
+
 ```{r}
+head(geoplaces)
 dim(geoplaces)
 summary(geoplaces)
 ```
+
 ```{r}
+head(rating)
 dim(rating)
 summary(rating)
-```
-```{r}
-dim(usercuisine)
-summary(usercuisine)
-```
-```{r}
-dim(userpayment)
-summary(userpayment)
+ggplot(rating, aes(food_rating, service_rating)) +  
+  geom_smooth(method = "lm")
 ```
 
 ```{r}
+head(usercuisine)
+dim(usercuisine)
+summary(usercuisine)
+levels(usercuisine$Rcuisine)
+```
+
+```{r}
+head(userpayment)
+dim(userpayment)
+summary(userpayment)
+ggplot(userpayment, aes(x = Upayment, fill=Upayment)) + geom_bar()
+```
+
+```{r}
+head(userprofile)
 dim(userprofile)
 summary(userprofile)
+ggplot(userprofile) + geom_mosaic(aes(product(smoker,drink_level), fill = smoker))
 ```
 
 # Explorative Datenanalyse, speziell Visualisierung [20%]
