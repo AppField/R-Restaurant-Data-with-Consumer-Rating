@@ -3,15 +3,30 @@ title: "Restaurant Data with Consumer Rating"
 author: "Roman Mühlfeldner and Ana Stanusic"
 output: html_notebook
 ---
+# Data Science Project: Restaurant Data with Customer Rating
+
+## Libraries
 
 ```{r}
 library(tidyverse)
 library(ggplot2)
 library(ggmosaic)
 library(ggrepel)
+library(leaflet)
+library(plyr)
 ```
 
-# Datenaufbereitung [10%]
+## Aufgabenstellung:
+
+* Datenaufbereitung [10%]
+* Explorative Datenanalyse, speziell Visualisierung [20%]
+* Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
+* Deployment des besten Modells mittels Web Service [10%]
+* Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
+* Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
+* Dokumentation mittels Notebook
+
+### Datenaufbereitung
 
 Daten einlesen:
 
@@ -27,18 +42,104 @@ userpayment <- read.csv('./data/userpayment.csv')
 userprofile <- read.csv('./data/userprofile.csv', na.strings = "?")
 ```
 
+### Datenanalyse
 
 ```{r}
 head(accept)
 dim(accept)
 summary(accept)
+levels(accept$Rpayment)
 ggplot(accept, aes(x = Rpayment, fill=Rpayment)) + geom_bar()
 ```
+
+Aufgrund der Anzahl der verschiedenen Kreditkarten ist die Anzahl der Zahlungsmethoden mit 12 Ausprägungen zu hoch. Aus diesem Grund werden die verschiedenen Kreditkarten zusammengefasst.
+Einfachheitshalber werden zusätzlich noch Carte_blanche und checks zusammengefasst.
+
+```{r}
+accept$Rpayment = revalue(accept$Rpayment, c("American_Express"="credit_card", "MasterCard-Eurocard"="credit_card", "Visa"="credit_card", "VISA"="credit_card", "Diners_Club"="credit_card", "Japan_Credit_Bureau"="credit_card"))
+
+accept$Rpayment = revalue(accept$Rpayment, c("Carte_Blanche"="checks", "checks"="checks"))
+
+ggplot(accept, aes(x = Rpayment, fill=Rpayment)) + geom_bar()
+```
+
 ```{r}
 head(cuisine)
 dim(cuisine)
+levels(cuisine$Rcuisine)
 summary(cuisine)
 ggplot(cuisine, aes(x = Rcuisine, fill=Rcuisine)) + geom_bar()
+```
+Die kategoriale Varible Rcuisine hat 59 Ausprägungen. Aus diesem Grund müssen diese zusammengefasst werden. Zusammengefasst werden die Ausprägungen nach den Regionen.
+* Persian
+* Asia
+* American
+* European
+* South_American
+* African
+* International
+
+```{r}
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Japanese"="Asia", "Chinese"="Asian",
+                                               "Sushi"="Asian", "Korean"="Asian",
+                                               "Mongolian"="Asian", "Thai"="Asian",
+                                               "Asia"="Asian", "Vietnamese"="Asian",
+                                               "Deli-Sandwiches"="Asian"))
+
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Dutch-Belgian"="European",
+                                               "Continental-European"="European",
+                                               "Eastern_European"="European",
+                                               "Greek"="European",
+                                               "Spanish"="European", "French"="European",
+                                               "German"="European", "Italian"="European",
+                                               "Polish"="European", "Pizzeria"="European",
+                                               "Dessert-Ice_Cream"="European", 
+                                               "Seafood"="European"))
+
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Ethiopian"="African",
+                                               "African"="African"))
+
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Barbecue"="American",
+                                               "Hot_Dogs"="American",
+                                               "Steaks"="American",
+                                               "American"="American",
+                                               "Fast_Food"="American",
+                                               "Burgers"="American",
+                                               "California"="American",
+                                               "Southwestern"="American",
+                                               "Game"="American",
+                                               "Diner"="American"))
+
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Persian"="Persian",
+                                               "Mediterranean"="Persian",
+                                               "Turkish"="Persian",
+                                               "Afghan"="Persian",
+                                               "Armenian"="Persian"))
+
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Brazilian"="South_American",
+                                               "Caribbean"="South_American",
+                                               "Southern"="South_American",
+                                               "Mexican"="South_American",
+                                               "Latin_American"="South_American"))
+
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Bar"="International",
+                                               "Contemporary"="International",
+                                               "Fine_Dining"="International",
+                                               "Vegetarian"="International",
+                                               "Bakery"="International",
+                                               "Cafe-Coffee_Shop"="International",
+                                               "Organic-Healthy"="International",
+                                               "Juice"="International",
+                                               "Soup"="International",
+                                               "Bagels"="International",
+                                               "Bar_Pub_Brewery"="International",
+                                               "Breakfast-Brunch"="International",
+                                               "Cafeteria"="International",
+                                               "Family"="International",
+                                               "Regional"="International"))
+
+
+levels(cuisine$Rcuisine)
 ```
 
 ```{r}
@@ -59,6 +160,7 @@ ggplot(parking, aes(x = parking_lot, fill=parking_lot)) + geom_bar()
 head(geoplaces)
 dim(geoplaces)
 summary(geoplaces)
+leaflet(geoplaces)
 ```
 
 ```{r}
