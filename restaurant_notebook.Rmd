@@ -140,6 +140,7 @@ cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Bar"="International",
 
 
 levels(cuisine$Rcuisine)
+ggplot(cuisine, aes(x = Rcuisine, fill=Rcuisine)) + geom_bar()
 ```
 
 ```{r}
