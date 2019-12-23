@@ -56,7 +56,7 @@ Aufgrund der Anzahl der verschiedenen Kreditkarten ist die Anzahl der Zahlungsme
 Einfachheitshalber werden zusätzlich noch Carte_blanche und checks zusammengefasst.
 
 ```{r}
-accept$Rpayment = revalue(accept$Rpayment, c("American_Express"="credit_card", "MasterCard-Eurocard"="credit_card", "Visa"="credit_card", "VISA"="credit_card", "Diners_Club"="credit_card", "Japan_Credit_Bureau"="credit_card"))
+accept$Rpayment = revalue(accept$Rpayment, c("American_Express"="credit_card", "MasterCard-Eurocard"="credit_card", "Visa"="credit_card", "VISA"="credit_card", "Diners_Club"="credit_card", "Japan_Credit_Bureau"="credit_card", "Discover"="credit_card"))
 
 accept$Rpayment = revalue(accept$Rpayment, c("Carte_Blanche"="checks", "checks"="checks"))
 
