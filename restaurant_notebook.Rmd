@@ -42,7 +42,15 @@ userpayment <- read.csv('./data/userpayment.csv')
 userprofile <- read.csv('./data/userprofile.csv', na.strings = "?")
 ```
 
+Grundsätzlich sind die Daten in drei Gruppen zu unterteilen:
+  1. Restaurant-Sicht (inklusive den Geo-Daten)
+  2. Kunden-Sicht
+  3. Rating vom Kunden des Restaurant
+
+
 ### Datenanalyse
+
+#### Restaurant-Daten
 
 ```{r}
 head(accept)
@@ -80,7 +88,7 @@ Die kategoriale Varible Rcuisine hat 59 Ausprägungen. Aus diesem Grund müssen 
 * International
 
 ```{r}
-cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Japanese"="Asia", "Chinese"="Asian",
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Japanese"="Asian", "Chinese"="Asian",
                                                "Sushi"="Asian", "Korean"="Asian",
                                                "Mongolian"="Asian", "Thai"="Asian",
                                                "Asia"="Asian", "Vietnamese"="Asian",
@@ -140,13 +148,18 @@ cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Bar"="International",
 
 
 levels(cuisine$Rcuisine)
+```
+
+```{r}
 ggplot(cuisine, aes(x = Rcuisine, fill=Rcuisine)) + geom_bar()
 ```
+
 
 ```{r}
 head(hours)
 dim(hours)
 summary(hours)
+levels(hours$hours)
 ggplot(hours, aes(x = days, fill=hours)) + geom_bar()
 ```
 
@@ -157,20 +170,30 @@ summary(parking)
 ggplot(parking, aes(x = parking_lot, fill=parking_lot)) + geom_bar()
 ```
 
+Die Parkplatzinformationen werden gruppiert nach ja und nein.
+
+```{r}
+parking_grouped <- parking
+parking_grouped$parking_lot = revalue(parking_grouped$parking_lot, c("fee"="yes", "public"="yes", "street"="yes", "valet parking"="yes", "validated parking"="yes"))
+ggplot(parking_grouped, aes(x = parking_lot, fill=parking_lot), ) + geom_bar() + coord_flip()
+```
+
+
 ```{r}
 head(geoplaces)
 dim(geoplaces)
 summary(geoplaces)
-leaflet(geoplaces)
 ```
 
 ```{r}
-head(rating)
-dim(rating)
-summary(rating)
-ggplot(rating, aes(food_rating, service_rating)) +  
-  geom_smooth(method = "lm")
+m <- leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng=geoplaces$longitude, lat=geoplaces$latitude, popup=geoplaces$name)
+m  # Print the map
 ```
+
+
+#### Kunden-Daten
 
 ```{r}
 head(usercuisine)
@@ -179,10 +202,113 @@ summary(usercuisine)
 levels(usercuisine$Rcuisine)
 ```
 
+Um die Ausprägungen der Rcuisine zu reduzieren werden die gleichen Levels wie obrig verwendet.
+
+```{r}
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Japanese"="Asian", "Chinese"="Asian",
+                                               "Sushi"="Asian", "Korean"="Asian",
+                                               "Mongolian"="Asian", "Thai"="Asian",
+                                               "Asia"="Asian", "Vietnamese"="Asian",
+                                               "Deli-Sandwiches"="Asian",
+                                               "Southeast_Asian"="Asian",
+                                               "Burmese"="Asian", "Cambodian"="Asian", 
+                                               "Malaysian"="Asian", "Dim_Sum"="Asian", "Indonesian"="Asian"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Dutch-Belgian"="European",
+                                               "Continental-European"="European",
+                                               "Eastern_European"="European",
+                                               "Greek"="European",
+                                               "Spanish"="European", "French"="European",
+                                               "German"="European", "Italian"="European",
+                                               "Polish"="European", "Pizzeria"="European",
+                                               "Dessert-Ice_Cream"="European", 
+                                               "Seafood"="European",
+                                               "British"="European",
+                                               "Irish"="European",
+                                               "Swiss"="European",
+                                               "Filipino"="European", "Austrian"="European", "Hungarian"="European",
+                                               "Portuguese"="European", "Romanian"="European", "Basque"="European",
+                                               "Scandinavian"="European", "Russian-Ukrainian"="European"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Ethiopian"="African",
+                                               "African"="African",
+                                               "North_African"="African",
+                                               "Israeli"="African",
+                                               "Jamaican"="African", "Lebanese"="African", "Tibetan"="African", "Tunisian"="African", 
+                                               "Middle_Eastern"="African", "Moroccan"="African"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Barbecue"="American",
+                                               "Hot_Dogs"="American",
+                                               "Steaks"="American",
+                                               "American"="American",
+                                               "Fast_Food"="American",
+                                               "Burgers"="American",
+                                               "California"="American",
+                                               "Southwestern"="American",
+                                               "Game"="American",
+                                               "Diner"="American",
+                                               "Doughnuts"="American",
+                                               "Pacific_Northwest"="American",
+                                               "Cajun-Creole"="American",
+                                               "Pacific_Rim"="American",
+                                               "Canadian"="American",
+                                               "Hawaiian"="American", "Indigenous"="American"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Persian"="Persian",
+                                               "Mediterranean"="Persian",
+                                               "Turkish"="Persian",
+                                               "Afghan"="Persian",
+                                               "Armenian"="Persian",
+                                               "Indian-Pakistani"="Persian"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Brazilian"="South_American",
+                                               "Caribbean"="South_American",
+                                               "Southern"="South_American",
+                                               "Mexican"="South_American",
+                                               "Latin_American"="South_American", "Peruvian"="South_American",
+                                               "Tapas"="South_American", "Tex-Mex"="South_American",
+                                               "Chilean"="South_American", "Cuban"="South_American"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Bar"="International",
+                                               "Contemporary"="International",
+                                               "Fine_Dining"="International",
+                                               "Vegetarian"="International",
+                                               "Bakery"="International",
+                                               "Cafe-Coffee_Shop"="International",
+                                               "Organic-Healthy"="International",
+                                               "Juice"="International",
+                                               "Soup"="International",
+                                               "Bagels"="International",
+                                               "Bar_Pub_Brewery"="International",
+                                               "Breakfast-Brunch"="International",
+                                               "Cafeteria"="International",
+                                               "Family"="International",
+                                               "Regional"="International",
+                                               "Eclectic"="International", "Fusion"="International",
+                                               "Tea_House"="International", 
+                                               "Australian"="International",
+                                               "Kosher"="International", "Polynesian"="International"))
+
+
+levels(usercuisine$Rcuisine)
+```
+
+```{r}
+ggplot(usercuisine, aes(x = Rcuisine, fill=Rcuisine)) + geom_bar()
+```
+
+
 ```{r}
 head(userpayment)
 dim(userpayment)
 summary(userpayment)
+ggplot(userpayment, aes(x = Upayment, fill=Upayment)) + geom_bar()
+```
+
+Auch bei den Zahlungsmethoden werden die Kreditkarten wie obrig zusammengefasst.
+
+```{r}
+userpayment$Upayment = revalue(userpayment$Upayment, c("American_Express"="credit_card", "MasterCard-Eurocard"="credit_card", "VISA"="credit_card"))
 ggplot(userpayment, aes(x = Upayment, fill=Upayment)) + geom_bar()
 ```
 
@@ -192,6 +318,17 @@ dim(userprofile)
 summary(userprofile)
 ggplot(userprofile) + geom_mosaic(aes(product(smoker,drink_level), fill = smoker))
 ```
+
+#### Rating
+
+```{r}
+head(rating)
+dim(rating)
+summary(rating)
+ggplot(rating, aes(food_rating, service_rating)) +  
+  geom_smooth(method = "lm")
+```
+
 
 # Explorative Datenanalyse, speziell Visualisierung [20%]
 
