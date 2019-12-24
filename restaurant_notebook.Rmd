@@ -42,6 +42,7 @@ userpayment <- read.csv('./data/userpayment.csv')
 userprofile <- read.csv('./data/userprofile.csv', na.strings = "?")
 ```
 
+Die Daten bestehen aus verschiedenen Datensätzen, die von Restaurants in Mexiko stammen. 
 Grundsätzlich sind die Daten in drei Gruppen zu unterteilen:
   1. Restaurant-Sicht (inklusive den Geo-Daten)
   2. Kunden-Sicht
@@ -159,9 +160,11 @@ ggplot(cuisine, aes(x = Rcuisine, fill=Rcuisine)) + geom_bar()
 head(hours)
 dim(hours)
 summary(hours)
-levels(hours$hours)
-ggplot(hours, aes(x = days, fill=hours)) + geom_bar()
+#levels(hours$hours)
+#ggplot(hours, aes(x = days, fill=hours)) + geom_bar()
 ```
+
+Für die weitere Ausarbeitung werden die Öffnungszeiten nicht weiter berücksichtigt, da eine Gruppierung auf wenige Ausprägungen sich schwierig darstellt und somit für vorhersagen schwer zu verwenden ist.
 
 ```{r}
 head(parking)
@@ -329,8 +332,15 @@ ggplot(rating, aes(food_rating, service_rating)) +
   geom_smooth(method = "lm")
 ```
 
-# Explorative Datenanalyse, speziell Visualisierung [20%]
+### Explorative Datenanalyse, speziell Visualisierung [20%]
 
+#### Restaurant Data
+Bewertugen der Places mit cuisine und name
+
+#### Kunden Data
+Bewertugen der Places mit cuisine und name
+
+#### Rating Data
 Bewertugen der Places mit cuisine und name
 
 ```{r}
@@ -351,14 +361,14 @@ rating_detailed %>%
 
 ```{r}
 ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +  
-  geom_smooth(method = "lm")
+  geom_smooth(method = "lm", se=F) + ggtitle("Relation Food Rating and Service Rating Grouped By Cuisine")
 ```
 
 
-# Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
+#### Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
 
-# Deployment des besten Modells mittels Web Service [10%]
+#### Deployment des besten Modells mittels Web Service [10%]
 
-# Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
+#### Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
 
-# Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
+#### Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
