@@ -349,6 +349,11 @@ rating_detailed %>%
             service_rating = mean(food_rating))
 ```
 
+```{r}
+ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +  
+  geom_smooth(method = "lm")
+```
+
 
 # Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
 
