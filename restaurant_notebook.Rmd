@@ -340,6 +340,27 @@ Bewertugen der Places mit cuisine und name
 #### Kunden Data
 Bewertugen der Places mit cuisine und name
 
+```{r}
+user_detail <- userprofile %>% 
+  join(usercuisine) %>% 
+  join(userpayment)
+
+user_detail
+```
+
+Standort der Kunden und der Restaurants
+
+```{r}
+customers = makeIcon("user_icon.png", 50, 50)
+restaurants = makeIcon("restaurant_icon.png", 50, 50)
+m <- leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng=userprofile$longitude, lat=userprofile$latitude, popup=userprofile$userID, icon = customers) %>% 
+  addMarkers(lng = geoplaces$longitude, lat = geoplaces$latitude, icon = restaurants, popup = geoplaces$name)
+m  # Print the map
+```
+
+
 #### Rating Data
 Bewertugen der Places mit cuisine und name
 
