@@ -8,12 +8,12 @@ output: html_notebook
 ## Libraries
 
 ```{r}
-library(tidyverse)
+library(plyr)
 library(ggplot2)
 library(ggmosaic)
 library(ggrepel)
 library(leaflet)
-library(plyr)
+library(tidyverse)
 ```
 
 ## Aufgabenstellung:
@@ -329,8 +329,25 @@ ggplot(rating, aes(food_rating, service_rating)) +
   geom_smooth(method = "lm")
 ```
 
-
 # Explorative Datenanalyse, speziell Visualisierung [20%]
+
+Bewertugen der Places mit cuisine und name
+
+```{r}
+head(rating)
+
+rating_detailed <- rating %>% 
+  inner_join(cuisine) %>% 
+  inner_join(geoplaces) %>%
+  arrange(placeID) %>% 
+  select(placeID, rating, food_rating, service_rating, name, Rcuisine)
+
+rating_detailed %>% 
+  group_by(placeID, name, Rcuisine) %>% 
+  summarize(rating = mean(rating),
+            food_rating = mean(food_rating),
+            service_rating = mean(food_rating))
+```
 
 
 # Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
