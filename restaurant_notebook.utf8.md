@@ -804,7 +804,7 @@ m  # Print the map
 ```
 
 <!-- rnb-source-end -->
-preserve61224e6f701cdf2c
+preservef41eb1d4f43b5dc9
 
 <!-- rnb-chunk-end -->
 
@@ -1552,21 +1552,7 @@ Standort der Kunden und der Restaurants
 
 <!-- rnb-chunk-begin -->
 
-
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY3VzdG9tZXJzID0gbWFrZUljb24oXCJ1c2VyX2ljb24ucG5nXCIsIDUwLCA1MClcbnJlc3RhdXJhbnRzID0gbWFrZUljb24oXCJyZXN0YXVyYW50X2ljb24ucG5nXCIsIDUwLCA1MClcbm0gPC0gbGVhZmxldCgpICU+JVxuICBhZGRUaWxlcygpICU+JSAgIyBBZGQgZGVmYXVsdCBPcGVuU3RyZWV0TWFwIG1hcCB0aWxlc1xuICBhZGRNYXJrZXJzKGxuZz11c2VycHJvZmlsZSRsb25naXR1ZGUsIGxhdD11c2VycHJvZmlsZSRsYXRpdHVkZSwgcG9wdXA9dXNlcnByb2ZpbGUkdXNlcklELCBpY29uID0gY3VzdG9tZXJzKSAlPiUgXG4gIGFkZE1hcmtlcnMobG5nID0gZ2VvcGxhY2VzJGxvbmdpdHVkZSwgbGF0ID0gZ2VvcGxhY2VzJGxhdGl0dWRlLCBpY29uID0gcmVzdGF1cmFudHMsIHBvcHVwID0gZ2VvcGxhY2VzJG5hbWUpXG5tICAjIFByaW50IHRoZSBtYXBcbmBgYCJ9 -->
-
-```r
-customers = makeIcon("user_icon.png", 50, 50)
-restaurants = makeIcon("restaurant_icon.png", 50, 50)
-m <- leaflet() %>%
-  addTiles() %>%  # Add default OpenStreetMap map tiles
-  addMarkers(lng=userprofile$longitude, lat=userprofile$latitude, popup=userprofile$userID, icon = customers) %>% 
-  addMarkers(lng = geoplaces$longitude, lat = geoplaces$latitude, icon = restaurants, popup = geoplaces$name)
-m  # Print the map
-```
-
-<!-- rnb-source-end -->
-preservef0da4d438df57c0b
+preserveaa6f22c5b59b47ff
 
 <!-- rnb-chunk-end -->
 
