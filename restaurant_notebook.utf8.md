@@ -804,7 +804,7 @@ m  # Print the map
 ```
 
 <!-- rnb-source-end -->
-preservef41eb1d4f43b5dc9
+preserve5a08e293204999c3
 
 <!-- rnb-chunk-end -->
 
@@ -1552,7 +1552,7 @@ Standort der Kunden und der Restaurants
 
 <!-- rnb-chunk-begin -->
 
-preserveaa6f22c5b59b47ff
+preservec5d508ba1730a52d
 
 <!-- rnb-chunk-end -->
 
@@ -1600,8 +1600,8 @@ Einfluss von dem Trinkverhalten auf das Budget.
 <!-- rnb-text-begin -->
 
 
-
 #### Rating Data
+
 Bewertugen der Places mit cuisine und name
 
 
@@ -1711,6 +1711,8 @@ ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +
 
 
 #### Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
+
+Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine, smoker, budget, drinking_level.
 
 #### Deployment des besten Modells mittels Web Service [10%]
 

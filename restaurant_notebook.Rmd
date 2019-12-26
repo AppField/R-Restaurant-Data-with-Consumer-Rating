@@ -444,12 +444,11 @@ ggplot(user_detail) + geom_mosaic(aes(product(drink_level,budget), fill = drink_
 
 ```{r}
 user_detail
-
 ggplot(user_detail) + geom_mosaic(aes(product(drink_level,budget), fill = drink_level)) + facet_wrap(.~Rcuisine, ncol=2)
 ```
 
-
 #### Rating Data
+
 Bewertugen der Places mit cuisine und name
 
 ```{r}
@@ -475,6 +474,8 @@ ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +
 
 
 #### Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
+
+Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine, smoker, budget, drinking_level.
 
 #### Deployment des besten Modells mittels Web Service [10%]
 
