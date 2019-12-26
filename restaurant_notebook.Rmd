@@ -476,9 +476,10 @@ ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +
 #### Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
 
 Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine, smoker, budget, drinking_level.
+Als Methoden wurden Rpart, RandomForest, NaiveBayes und KNN gewählt, die miteinander verglichen werden.
 
 #### Deployment des besten Modells mittels Web Service [10%]
 
 #### Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
-
+ 
 #### Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
