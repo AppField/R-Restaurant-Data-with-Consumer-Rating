@@ -412,6 +412,19 @@ chisq <- chisq.test(dt)
 corrplot(chisq$residuals, is.cor = FALSE)
 ```
 
+Verteilung der Preisklassen in den jeweiligen Cuisines
+
+```{r}
+detailed_price <- geoplaces %>% 
+  join(cuisine)
+
+detailed_price
+
+ggplot(detailed_price, aes(x = price, fill=price)) + geom_bar()
+ggplot(detailed_price, aes(x = price, fill=price)) + geom_bar() + facet_wrap(.~Rcuisine)
+```
+
+
 ### Kunden Data
 Bewertugen der Places mit cuisine und name
 
@@ -446,6 +459,13 @@ user_detail
 ggplot(user_detail) + geom_mosaic(aes(product(drink_level,budget), fill = drink_level)) + facet_wrap(.~Rcuisine, ncol=2)
 ```
 
+Age
+
+```{r}
+ggplot(user_detail, aes(birth_year, fill=Rcuisine)) + geom_bar() + coord_flip()
+```
+
+
 ### Rating Data
 
 Bewertugen der Places mit cuisine und name
@@ -471,10 +491,34 @@ ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +
   geom_smooth(method = "lm", se=F) + ggtitle("Relation Food Rating and Service Rating Grouped By Cuisine")
 ```
 
+Rating nach Alter und Cuisine
+
+```{r}
+rating_detailed_user <- rating %>% 
+  join(userprofile) %>% 
+  join(usercuisine)
+
+rating_detailed_user
+
+ggplot(rating_detailed_user, aes(rating, colour = as.factor(birth_year))) + geom_density() + facet_wrap(.~Rcuisine)
+```
+
+Rating nach Preis Klasse
+
+```{r}
+rating_detailed_price <- rating %>% 
+  join(cuisine) %>% 
+  join(geoplaces)
+
+rating_detailed_price
+
+ggplot(rating_detailed_price, aes(rating, colour = price)) + geom_density() + facet_wrap(.~Rcuisine)
+```
+
 
 ## Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
 
-Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine, smoker, budget, drinking_level.
+Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine, smoker, budget, drinking_level, birth_year.
 Als Methoden wurden Rpart, RandomForest, NaiveBayes und KNN gewählt, die miteinander verglichen werden.
 
 ### Vorbereitung der Daten
@@ -482,7 +526,25 @@ Als Methoden wurden Rpart, RandomForest, NaiveBayes und KNN gewählt, die mitein
 Data Values
 
 ```{r}
+rating_user_detail <- rating %>% 
+  join(userprofile) %>% 
+  join(cuisine)
 
+data = rating_user_detail %>% 
+  select(rating, food_rating, service_rating, smoker, drink_level, budget, birth_year, Rcuisine)
+
+data
+```
+
+Splitting
+
+```{r}
+N = nrow(dat)
+set.seed(4711)
+train_ind = sample(1: N, size = N * 2 / 3)
+
+train = dat[train_ind,]
+test = dat[-train_ind,]
 ```
 
 Scaling
