@@ -9,11 +9,14 @@ output: html_notebook
 
 ```{r}
 library(plyr)
+library(gplots)
+library(RColorBrewer)
 library(ggplot2)
 library(ggmosaic)
 library(ggrepel)
 library(leaflet)
 library(tidyverse)
+library(corrplot)
 ```
 
 ## Aufgabenstellung:
@@ -335,7 +338,81 @@ ggplot(rating, aes(food_rating, service_rating)) +
 ### Explorative Datenanalyse, speziell Visualisierung [20%]
 
 #### Restaurant Data
-Bewertugen der Places mit cuisine und name
+
+Eigenheiten der Restaurants
+
+```{r}
+cuisine_detail <- cuisine %>% 
+  join(geoplaces)
+
+cuisine_detail <- cuisine_detail %>% 
+  filter(!is.na(name)) %>%
+  select(placeID, name, Rcuisine, alcohol, smoking_area, dress_code, accessibility, price, Rambience)
+
+cuisine_detail 
+```
+
+Überblick über einzelne Ausprägungen in den Bereichen Alcohol, Smoking und Price
+
+```{r}
+# Generating Distribution Tables
+## Alcohol
+cuisine_detail_dist_alc<- cuisine_detail %>% 
+  distinct(Rcuisine, alcohol)
+
+cuisine_detail_dist_alc <- gather(cuisine_detail_dist_alc, key, value, -Rcuisine) %>% 
+  count(Rcuisine, value) %>% 
+  spread(value, n, fill = 0) %>% 
+  group_by(Rcuisine) %>% 
+  rename(Alc_Full_Bar = Full_Bar, Alc_No_Alcohol_Served = No_Alcohol_Served, Alc_Wine_Beer = "Wine-Beer")
+
+cuisine_detail_dist_alc
+
+## Smoking
+cuisine_detail_dist_smoking<- cuisine_detail %>% 
+  distinct(Rcuisine, smoking_area)
+
+cuisine_detail_dist_smoking <- gather(cuisine_detail_dist_smoking, key, value, -Rcuisine) %>% 
+  count(Rcuisine, value) %>% 
+  spread(value, n, fill = 0) %>% 
+  group_by(Rcuisine) %>% 
+  rename(smoking_not_permitted = "not permitted", smoking_only_at_bar = "only at bar", smoking_none = none, smoking_section = section, smoking_permitted = permitted)
+
+cuisine_detail_dist_smoking
+
+## Price
+cuisine_detail_dist_price<- cuisine_detail %>% 
+  distinct(Rcuisine, price)
+
+cuisine_detail_dist_price <- gather(cuisine_detail_dist_price, key, value, -Rcuisine) %>% 
+  count(Rcuisine, value) %>% 
+  spread(value, n, fill = 0) %>% 
+  group_by(Rcuisine) %>% 
+  rename(price_low = low, price_medium = medium, price_high = high) 
+
+cuisine_detail_dist_price
+
+# JOINING TABLES
+
+dt_dist <- cbind(cuisine_detail_dist_alc, cuisine_detail_dist_smoking, cuisine_detail_dist_price)
+dt_dist$Rcuisine1 <- NULL
+dt_dist$Rcuisine2 <- NULL
+dt <- column_to_rownames(dt_dist, 'Rcuisine')
+dt <- as.table(as.matrix(dt))
+dt
+
+balloonplot(t(dt), main ="Distribution Smoking, Alcohol, Pricing Grouped By the Cuisines", xlab ="", ylab="",
+            label = FALSE, show.margins = FALSE, colsrt=90, rowmar=5, colmar=10)
+```
+
+Chi-Squared Tests um Zusammenhänge der Variablen zu erkennen.
+Dafür wird zunächst eine Distribution Table erzeugt mit den Variablen: alcohol, smoking_area, price gruppiert nach Rcuisine.
+#!!! NOCH NICHT DAS RICHTIGE
+```{r}
+chisq <- chisq.test(dt)
+corrplot(chisq$residuals, is.cor = FALSE)
+```
+
 
 #### Kunden Data
 Bewertugen der Places mit cuisine und name
