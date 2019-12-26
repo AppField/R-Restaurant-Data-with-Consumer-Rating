@@ -413,7 +413,6 @@ chisq <- chisq.test(dt)
 corrplot(chisq$residuals, is.cor = FALSE)
 ```
 
-
 #### Kunden Data
 Bewertugen der Places mit cuisine und name
 
@@ -435,6 +434,18 @@ m <- leaflet() %>%
   addMarkers(lng=userprofile$longitude, lat=userprofile$latitude, popup=userprofile$userID, icon = customers) %>% 
   addMarkers(lng = geoplaces$longitude, lat = geoplaces$latitude, icon = restaurants, popup = geoplaces$name)
 m  # Print the map
+```
+
+Einfluss von dem Trinkverhalten auf das Budget.
+
+```{r}
+ggplot(user_detail) + geom_mosaic(aes(product(drink_level,budget), fill = drink_level))
+```
+
+```{r}
+user_detail
+
+ggplot(user_detail) + geom_mosaic(aes(product(drink_level,budget), fill = drink_level)) + facet_wrap(.~Rcuisine, ncol=2)
 ```
 
 
