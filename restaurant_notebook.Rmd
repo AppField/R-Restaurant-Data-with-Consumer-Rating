@@ -29,7 +29,7 @@ library(corrplot)
 * Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
 * Dokumentation mittels Notebook
 
-### Datenaufbereitung
+## Datenaufbereitung
 
 Daten einlesen:
 
@@ -52,9 +52,9 @@ Grundsätzlich sind die Daten in drei Gruppen zu unterteilen:
   3. Rating vom Kunden des Restaurant
 
 
-### Datenanalyse
+## Datenanalyse
 
-#### Restaurant-Daten
+### Restaurant-Daten
 
 ```{r}
 head(accept)
@@ -198,8 +198,7 @@ m <- leaflet() %>%
 m  # Print the map
 ```
 
-
-#### Kunden-Daten
+### Kunden-Daten
 
 ```{r}
 head(usercuisine)
@@ -325,7 +324,7 @@ summary(userprofile)
 ggplot(userprofile) + geom_mosaic(aes(product(smoker,drink_level), fill = smoker))
 ```
 
-#### Rating
+### Rating
 
 ```{r}
 head(rating)
@@ -335,9 +334,9 @@ ggplot(rating, aes(food_rating, service_rating)) +
   geom_smooth(method = "lm")
 ```
 
-### Explorative Datenanalyse, speziell Visualisierung [20%]
+## Explorative Datenanalyse, speziell Visualisierung [20%]
 
-#### Restaurant Data
+### Restaurant Data
 
 Eigenheiten der Restaurants
 
@@ -413,7 +412,7 @@ chisq <- chisq.test(dt)
 corrplot(chisq$residuals, is.cor = FALSE)
 ```
 
-#### Kunden Data
+### Kunden Data
 Bewertugen der Places mit cuisine und name
 
 ```{r}
@@ -447,7 +446,7 @@ user_detail
 ggplot(user_detail) + geom_mosaic(aes(product(drink_level,budget), fill = drink_level)) + facet_wrap(.~Rcuisine, ncol=2)
 ```
 
-#### Rating Data
+### Rating Data
 
 Bewertugen der Places mit cuisine und name
 
@@ -473,13 +472,46 @@ ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +
 ```
 
 
-#### Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
+## Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
 
 Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine, smoker, budget, drinking_level.
 Als Methoden wurden Rpart, RandomForest, NaiveBayes und KNN gewählt, die miteinander verglichen werden.
 
-#### Deployment des besten Modells mittels Web Service [10%]
+### Vorbereitung der Daten
 
-#### Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
+Data Values
+
+```{r}
+
+```
+
+Scaling
+
+```{r}
+
+```
+
+Tunen
+
+```{r}
+
+```
+
+Fitten
+
+```{r}
+
+```
+
+Predict
+
+```{r}
+
+```
+
+
+## Deployment des besten Modells mittels Web Service [10%]
+
+## Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
  
-#### Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
+## Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]

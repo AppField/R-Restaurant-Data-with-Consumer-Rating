@@ -152,7 +152,7 @@ corrplot 0.84 loaded
 * Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
 * Dokumentation mittels Notebook
 
-### Datenaufbereitung
+## Datenaufbereitung
 
 Daten einlesen:
 
@@ -192,9 +192,9 @@ Grundsätzlich sind die Daten in drei Gruppen zu unterteilen:
   3. Rating vom Kunden des Restaurant
 
 
-### Datenanalyse
+## Datenanalyse
 
-#### Restaurant-Daten
+### Restaurant-Daten
 
 
 <!-- rnb-text-end -->
@@ -922,8 +922,7 @@ m  # Print the map
 <!-- rnb-text-begin -->
 
 
-
-#### Kunden-Daten
+### Kunden-Daten
 
 
 <!-- rnb-text-end -->
@@ -1405,7 +1404,7 @@ ggplot(userprofile) + geom_mosaic(aes(product(smoker,drink_level), fill = smoker
 <!-- rnb-text-begin -->
 
 
-#### Rating
+### Rating
 
 
 <!-- rnb-text-end -->
@@ -1496,9 +1495,9 @@ ggplot(rating, aes(food_rating, service_rating)) +
 <!-- rnb-text-begin -->
 
 
-### Explorative Datenanalyse, speziell Visualisierung [20%]
+## Explorative Datenanalyse, speziell Visualisierung [20%]
 
-#### Restaurant Data
+### Restaurant Data
 
 Eigenheiten der Restaurants
 
@@ -1753,7 +1752,7 @@ corrplot(chisq$residuals, is.cor = FALSE)
 <!-- rnb-text-begin -->
 
 
-#### Kunden Data
+### Kunden Data
 Bewertugen der Places mit cuisine und name
 
 
@@ -1922,7 +1921,7 @@ ggplot(user_detail) + geom_mosaic(aes(product(drink_level,budget), fill = drink_
 <!-- rnb-text-begin -->
 
 
-#### Rating Data
+### Rating Data
 
 Bewertugen der Places mit cuisine und name
 
@@ -2032,16 +2031,99 @@ ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +
 
 
 
-#### Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
+## Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
 
 Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine, smoker, budget, drinking_level.
 Als Methoden wurden Rpart, RandomForest, NaiveBayes und KNN gewählt, die miteinander verglichen werden.
 
-#### Deployment des besten Modells mittels Web Service [10%]
+### Vorbereitung der Daten
 
-#### Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
+Data Values
+
+
+<!-- rnb-text-end -->
+
+
+<!-- rnb-chunk-begin -->
+
+
+
+<!-- rnb-chunk-end -->
+
+
+<!-- rnb-text-begin -->
+
+
+Scaling
+
+
+<!-- rnb-text-end -->
+
+
+<!-- rnb-chunk-begin -->
+
+
+
+<!-- rnb-chunk-end -->
+
+
+<!-- rnb-text-begin -->
+
+
+Tunen
+
+
+<!-- rnb-text-end -->
+
+
+<!-- rnb-chunk-begin -->
+
+
+
+<!-- rnb-chunk-end -->
+
+
+<!-- rnb-text-begin -->
+
+
+Fitten
+
+
+<!-- rnb-text-end -->
+
+
+<!-- rnb-chunk-begin -->
+
+
+
+<!-- rnb-chunk-end -->
+
+
+<!-- rnb-text-begin -->
+
+
+Predict
+
+
+<!-- rnb-text-end -->
+
+
+<!-- rnb-chunk-begin -->
+
+
+
+<!-- rnb-chunk-end -->
+
+
+<!-- rnb-text-begin -->
+
+
+
+## Deployment des besten Modells mittels Web Service [10%]
+
+## Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
  
-#### Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
+## Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
 
 <!-- rnb-text-end -->
 
