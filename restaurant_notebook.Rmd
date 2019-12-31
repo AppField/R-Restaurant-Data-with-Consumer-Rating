@@ -594,19 +594,31 @@ encoded_train_cuisine = as.data.frame(predict(encoder,train_cuisine_scaled))
 encoded_test_cuisine = as.data.frame(predict(encoder,test_cuisine_scaled))
 ```
 
-Tunen
+### Tunen der Modelle
 
+#### Models für Rating - Prediction
+
+KNN: 
+```{r}
+#df = data_frame(calories = train_scaled[,2], mfr = as.matrix(class2ind(train_scaled[,1])), shelf = train_scaled[,9])
+
+# Removing NA
+train_rating_scaled_na_free <- na.omit(train_rating_scaled)
+
+tunobj_knn = tune.knn(train_rating_scaled[,-1], train_rating_scaled$rating,
+                      na.action = na.omit,
+                      k = 1 : 10,
+                      tunecontrol = tune.control(sampling = "cross",cross = 10))
+summary(tunobj_knn)
+plot(tunobj_knn)
+```
+
+### Fitten des jeweiligen besten Models
 ```{r}
 
 ```
 
-Fitten
-
-```{r}
-
-```
-
-Predict
+### Predict
 
 ```{r}
 
