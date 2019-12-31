@@ -524,7 +524,7 @@ ggplot(rating_detailed_price, aes(rating, colour = price)) + geom_density() + fa
 ## Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
 
 Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine, smoker, budget, drinking_level, birth_year.
-Als Methoden wurden Rpart, RandomForest, NaiveBayes und KNN gewählt, die miteinander verglichen werden.
+Als Methoden wurden Rpart, RandomForest, NaiveBayes, KNN und Tenserflow gewählt, die miteinander verglichen werden.
 
 Für die Modelle wird die Cuisine vorhergesagt aufgrund der Prädiktoren smoker, drink_level, budget, personality vom User Profile.
 Als Methoden wurden Rpart, RandomForest, NaiveBayes, KNN und Tenserflow gewählt, die miteinander verglichen werden.
@@ -592,20 +592,26 @@ test_cuisine_scaled = predict(scaler, test_cuisine)
 encoder = dummyVars( ~ Rcuisine + smoker + drink_level + budget + personality, data = train_cuisine_scaled, fullRank = TRUE)
 encoded_train_cuisine = as.data.frame(predict(encoder,train_cuisine_scaled))
 encoded_test_cuisine = as.data.frame(predict(encoder,test_cuisine_scaled))
+
+# Removing NA
+train_rating_scaled_na_free <- na.omit(train_rating_scaled)
+train_cuisine_scaled_na_free <- na.omit(train_cuisine_scaled)
 ```
 
 ### Tunen der Modelle
 
-#### Models für Rating - Prediction
+#### Tunen für Rating - Prediction
 
 KNN: 
 ```{r}
-#df = data_frame(calories = train_scaled[,2], mfr = as.matrix(class2ind(train_scaled[,1])), shelf = train_scaled[,9])
+df = data_frame(rating = train_rating_scaled_na_free[,1], smoker = as.matrix(class2ind(train_rating_scaled_na_free[,2])), 
+                drink_level = as.matrix(class2ind(train_rating_scaled_na_free[,3])), 
+                budget = as.matrix(class2ind(train_rating_scaled_na_free[,4])), 
+                birth_year = train_rating_scaled_na_free$birth_year, 
+                Rcuisine = as.matrix(class2ind(train_rating_scaled_na_free$Rcuisine)))
 
-# Removing NA
-train_rating_scaled_na_free <- na.omit(train_rating_scaled)
 
-tunobj_knn = tune.knn(train_rating_scaled[,-1], train_rating_scaled$rating,
+tunobj_knn = tune.knn(df[,-1], df$rating,
                       na.action = na.omit,
                       k = 1 : 10,
                       tunecontrol = tune.control(sampling = "cross",cross = 10))
@@ -613,7 +619,67 @@ summary(tunobj_knn)
 plot(tunobj_knn)
 ```
 
-### Fitten des jeweiligen besten Models
+RPART:
+```{r}
+tuneobj_rpart = tune.rpart(rating ~ smoker + drink_level + budget + birth_year + Rcuisine, data = train_rating_scaled_na_free,
+                           na.action = na.omit,
+                           minsplit = 1:20*2,
+                           tunecontrol = tune.control(sampling = "fix", cross = N, nrepeat=5))
+
+summary(tuneobj_rpart)
+plot(tuneobj_rpart)
+```
+
+RandomForest:
+```{r}
+tuneobj_rf = tune.randomForest(rating ~ smoker + drink_level + budget + birth_year + Rcuisine, data = train_rating_scaled_na_free,
+                               ntree = 1:10 * 5,
+                               tunecontrol = tune.control(sampling = "fix"))
+
+summary(tuneobj_rf)
+plot(tuneobj_rf)
+```
+
+#### Tunen für Cuisine - Prediction
+
+KNN: 
+```{r}
+df = data_frame(smoker = as.matrix(class2ind(train_cuisine_scaled_na_free$smoker)), 
+                drink_level = as.matrix(class2ind(train_cuisine_scaled_na_free$drink_level)), 
+                budget = as.matrix(class2ind(train_cuisine_scaled_na_free$budget)),
+                personality = as.matrix(class2ind(train_cuisine_scaled_na_free$personality)),
+                Rcuisine = as.matrix(class2ind(train_cuisine_scaled_na_free$Rcuisine)))
+
+tunobj_knn = tune.knn(df[,-5], df$Rcuisine,
+                      na.action = na.omit,
+                      k = 1 : 10,
+                      tunecontrol = tune.control(sampling = "cross",cross = 10))
+summary(tunobj_knn)
+plot(tunobj_knn)
+```
+
+RPART:
+```{r}
+tuneobj_rpart = tune.rpart(Rcuisine ~ smoker + drink_level + budget + personality, data = train_cuisine_scaled_na_free,
+                           na.action = na.omit,
+                           minsplit = 1:20*2,
+                           tunecontrol = tune.control(sampling = "fix", cross = N, nrepeat=5))
+
+summary(tuneobj_rpart)
+plot(tuneobj_rpart)
+```
+
+RandomForest:
+```{r}
+tuneobj_rf = tune.randomForest(Rcuisine ~ smoker + drink_level + budget + personality, data = train_cuisine_scaled_na_free,
+                               ntree = 1:10 * 5,
+                               tunecontrol = tune.control(sampling = "fix"))
+
+summary(tuneobj_rf)
+plot(tuneobj_rf)
+```
+´
+### Fitten der Modelle
 ```{r}
 
 ```
