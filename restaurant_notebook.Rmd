@@ -15,6 +15,12 @@ library(ggplot2)
 library(ggmosaic)
 library(ggrepel)
 library(leaflet)
+library("caret")
+library("class")
+library("e1071")
+library("rpart")
+library("randomForest")
+library(keras)
 library(tidyverse)
 library(corrplot)
 ```
@@ -465,7 +471,6 @@ Age
 ggplot(user_detail, aes(birth_year, fill=Rcuisine)) + geom_bar() + coord_flip()
 ```
 
-
 ### Rating Data
 
 Bewertugen der Places mit cuisine und name
@@ -521,36 +526,72 @@ ggplot(rating_detailed_price, aes(rating, colour = price)) + geom_density() + fa
 Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine, smoker, budget, drinking_level, birth_year.
 Als Methoden wurden Rpart, RandomForest, NaiveBayes und KNN gewählt, die miteinander verglichen werden.
 
+Für die Modelle wird die Cuisine vorhergesagt aufgrund der Prädiktoren smoker, drink_level, budget, personality vom User Profile.
+Als Methoden wurden Rpart, RandomForest, NaiveBayes, KNN und Tenserflow gewählt, die miteinander verglichen werden.
+
 ### Vorbereitung der Daten
 
 Data Values
 
 ```{r}
+## Rating Data
 rating_user_detail <- rating %>% 
   join(userprofile) %>% 
   join(cuisine)
 
-data = rating_user_detail %>% 
-  select(rating, food_rating, service_rating, smoker, drink_level, budget, birth_year, Rcuisine)
+data_rating <- rating_user_detail %>% 
+  mutate(rating = as.factor(rating)) %>% 
+  select(rating , smoker, drink_level, budget, birth_year, Rcuisine) # without food_rating, service_rating
 
-data
+## Cuisine Data
+data_cuisine <- userprofile %>% 
+  join(usercuisine) %>% 
+  select(smoker, drink_level, budget, personality, Rcuisine)
+
+data_rating
+data_cuisine
 ```
 
 Splitting
 
 ```{r}
-N = nrow(dat)
 set.seed(4711)
+
+## Rating Data
+N = nrow(data_rating)
 train_ind = sample(1: N, size = N * 2 / 3)
 
-train = dat[train_ind,]
-test = dat[-train_ind,]
+train_rating = data_rating[train_ind,]
+test_rating = data_rating[-train_ind,]
+
+## Cuisine Data
+N = nrow(data_cuisine)
+train_ind = sample(1: N, size = N * 2 / 3)
+
+train_cuisine = data_cuisine[train_ind,]
+test_cuisine = data_cuisine[-train_ind,]
 ```
 
-Scaling
+Scaling (with Encoding)
 
 ```{r}
+## Rating Data
+scaler = preProcess(train_rating)
+train_rating_scaled = predict(scaler, train_rating)
+test_rating_scaled = predict(scaler, test_rating)
 
+encoder = dummyVars( ~ rating + smoker + drink_level + budget + birth_year + Rcuisine, data = train_rating_scaled, fullRank = TRUE)
+encoded_train_rating = as.data.frame(predict(encoder,train_rating_scaled))
+encoded_test_rating = as.data.frame(predict(encoder,test_rating_scaled))
+
+## Cuisine Data
+scaler = preProcess(train_cuisine)
+train_cuisine_scaled = predict(scaler, train_cuisine)
+test_cuisine_scaled = predict(scaler, test_cuisine)
+
+encoder = dummyVars( ~ Rcuisine + smoker + drink_level + budget + personality, data = train_cuisine_scaled, fullRank = TRUE)
+encoded_train_cuisine = as.data.frame(predict(encoder,train_cuisine_scaled))
+encoded_test_cuisine = as.data.frame(predict(encoder,test_cuisine_scaled))
 ```
 
 Tunen
