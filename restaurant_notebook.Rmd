@@ -624,7 +624,7 @@ RPART:
 tuneobj_rpart = tune.rpart(rating ~ smoker + drink_level + budget + birth_year + Rcuisine, data = train_rating_scaled_na_free,
                            na.action = na.omit,
                            minsplit = 1:20*2,
-                           tunecontrol = tune.control(sampling = "fix", cross = N, nrepeat=5))
+                           tunecontrol = tune.control(sampling = "fix", cross = N, nrepeat=10))
 
 summary(tuneobj_rpart)
 plot(tuneobj_rpart)
