@@ -527,7 +527,7 @@ Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine,
 Als Methoden wurden Rpart, RandomForest, NaiveBayes, KNN und Tenserflow gewählt, die miteinander verglichen werden.
 
 Für die Modelle wird die Cuisine vorhergesagt aufgrund der Prädiktoren smoker, drink_level, budget, personality vom User Profile.
-Als Methoden wurden Rpart, RandomForest, NaiveBayes, KNN und Tenserflow gewählt, die miteinander verglichen werden.
+Als Methoden wurden Rpart, RandomForest, NaiveBayes, NNET und Tenserflow gewählt, die miteinander verglichen werden.
 
 ### Vorbereitung der Daten
 
