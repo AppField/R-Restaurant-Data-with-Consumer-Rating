@@ -780,7 +780,7 @@ c(rating_rpart = mean(train_error_rpart), rating_rf = mean(train_error_rf), rati
 ```{r}
 fitted_rpart_rating <- predict(model_rpart_rating, test_rating_scaled, type = "class")
 fitted_rf_rating <- predict(model_rf_rating, test_rating_scaled, type = "class")
-fitted_nnet_rating <- predict(model_nnet_rating, test_rating_scaled, type = "class")
+fitted_nnet_rating <- predict(model_nnet_rating, test_rating_scaled_na_free, type = "class")
 fitted_knn_rating <- knn(train = df[, -1], cl = df$rating, test = df_test[, -1])
 fitted_naive_rating <- predict(model_naive_rating, test_rating_scaled)
 ```
@@ -813,7 +813,7 @@ c(rating_rpart = mean(test_error_rpart), rating_rf = mean(test_error_rf), rating
 cm_rpart <- confusionMatrix(fitted_rpart_rating, test_rating_scaled$rating)
 cm_rf <- confusionMatrix(fitted_rf_rating, test_rating_scaled$rating)
 cm_knn <- confusionMatrix(fitted_knn_rating, test_rating_scaled_na_free$rating)
-cm_nnet <- confusionMatrix(fitted_nnet_rating, test_rating_scaled$rating)
+cm_nnet <- confusionMatrix(as.factor(fitted_nnet_rating), test_rating_scaled_na_free$rating)
 cm_naive <- confusionMatrix(fitted_naive_rating, test_rating_scaled$rating)
 ```
 
@@ -864,7 +864,7 @@ c(rating_rpart = mean(test_error_rpart), rating_rf = mean(test_error_rf), rating
 ```{r}
 cm_rpart <- confusionMatrix(fitted_rpart_cuisine, test_cuisine_scaled$Rcuisine)
 cm_rf <- confusionMatrix(fitted_rf_cuisine, test_cuisine_scaled$Rcuisine)
-cm_nnet <- confusionMatrix(fitted_nnet_cuisine, test_cuisine_scaled$Rcuisine)
+cm_nnet <- confusionMatrix(as.factor(fitted_nnet_cuisine), test_cuisine_scaled$Rcuisine)
 cm_naive <- confusionMatrix(fitted_naive_cuisine, test_cuisine_scaled$Rcuisine)
 ```
 
