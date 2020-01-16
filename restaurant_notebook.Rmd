@@ -727,7 +727,55 @@ model_naive_cuisine <- naiveBayes(Rcuisine ~ ., data = train_cuisine_scaled_na_f
 
 ### Predict
 
-#### Predict Rating
+#### Predict Rating (Train)
+
+```{r}
+fitted_rpart_rating <- predict(model_rpart_rating, train_rating_scaled, type = "class")
+fitted_rf_rating <- predict(model_rf_rating, train_rating_scaled, type = "class")
+fitted_nnet_rating <- predict(model_nnet_rating, train_rating_scaled, type = "class")
+fitted_knn_rating <- knn(train = df[, -1], cl = df$rating, test = df_test[, -1])
+fitted_naive_rating <- predict(model_naive_rating, train_rating_scaled)
+```
+
+#### Predict Cuisine (Train)
+
+```{r}
+fitted_rpart_cuisine <- predict(model_rpart_cuisine, train_cuisine_scaled, type = "class")
+fitted_rf_cuisine <- predict(model_rf_cuisine, train_cuisine_scaled, type = "class")
+fitted_nnet_cuisine <- predict(model_nnet_cuisine, train_cuisine_scaled, type = "class")
+fitted_naive_cuisine <- predict(model_naive_cuisine, train_cuisine_scaled)
+```
+
+#### Training Error: Rating Modelle
+
+```{r}
+train_error_rpart <- fitted_rpart_rating != train_rating_scaled_na_free$rating
+train_error_nnet <- fitted_nnet_rating != train_rating_scaled$rating
+train_error_rf <- fitted_rf_rating != train_rating_scaled$rating
+train_error_knn <- fitted_knn_rating != train_rating_scaled_na_free$rating
+train_error_naive <- fitted_naive_rating != train_rating_scaled_na_free$rating
+
+train_error_rf <- na.omit(train_error_rf)
+train_error_nnet <- na.omit(train_error_nnet)
+
+c(rating_rpart = mean(train_error_rpart), rating_rf = mean(train_error_rf), rating_knn = mean(train_error_knn), rating_nnet = mean(train_error_nnet), rating_naive = mean(train_error_naive))
+```
+
+#### Training Error: Cuisine Modelle
+
+```{r}
+train_error_rpart <- fitted_rpart_cuisine != train_cuisine_scaled_na_free$Rcuisine
+train_error_nnet <- fitted_nnet_cuisine != train_cuisine_scaled$Rcuisine
+train_error_rf <- fitted_rf_cuisine != train_cuisine_scaled$Rcuisine
+train_error_naive <- fitted_naive_cuisine != train_cuisine_scaled_na_free$Rcuisine
+
+train_error_rf <- na.omit(train_error_rf)
+train_error_nnet <- na.omit(train_error_nnet)
+
+c(rating_rpart = mean(train_error_rpart), rating_rf = mean(train_error_rf), rating_nnet = mean(train_error_nnet), rating_naive = mean(train_error_naive))
+```
+
+#### Predict Rating (Test)
 
 ```{r}
 fitted_rpart_rating <- predict(model_rpart_rating, test_rating_scaled, type = "class")
@@ -737,7 +785,7 @@ fitted_knn_rating <- knn(train = df[, -1], cl = df$rating, test = df_test[, -1])
 fitted_naive_rating <- predict(model_naive_rating, test_rating_scaled)
 ```
 
-#### Predict Cuisine
+#### Predict Cuisine (Test)
 
 ```{r}
 fitted_rpart_cuisine <- predict(model_rpart_cuisine, test_cuisine_scaled, type = "class")
@@ -746,18 +794,64 @@ fitted_nnet_cuisine <- predict(model_nnet_cuisine, test_cuisine_scaled, type = "
 fitted_naive_cuisine <- predict(model_naive_cuisine, test_cuisine_scaled)
 ```
 
-### Bewertung der Modelle
-
-#### Rating Modelle
+#### Generalization error: Rating Modelle
 
 ```{r}
+test_error_rpart <- fitted_rpart_rating != test_rating_scaled_na_free$rating
+test_error_nnet <- fitted_nnet_rating != test_rating_scaled$rating
+test_error_rf <- fitted_rf_rating != test_rating_scaled$rating
+test_error_knn <- fitted_knn_rating != test_rating_scaled_na_free$rating
+test_error_naive <- fitted_naive_rating != test_rating_scaled_na_free$rating
 
+test_error_rf <- na.omit(test_error_rf)
+test_error_nnet <- na.omit(test_error_nnet)
+
+c(rating_rpart = mean(test_error_rpart), rating_rf = mean(test_error_rf), rating_knn = mean(test_error_knn), rating_nnet = mean(test_error_nnet), rating_naive = mean(test_error_naive))
 ```
 
-#### Cuisine Modelle
+#### Generalization error: Cuisine Modelle
 
 ```{r}
+test_error_rpart <- fitted_rpart_cuisine != test_cuisine_scaled_na_free$Rcuisine
+test_error_nnet <- fitted_nnet_cuisine != test_cuisine_scaled$Rcuisine
+test_error_rf <- fitted_rf_cuisine != test_cuisine_scaled$Rcuisine
+test_error_naive <- fitted_naive_cuisine != test_cuisine_scaled_na_free$Rcuisine
 
+test_error_rf <- na.omit(test_error_rf)
+test_error_nnet <- na.omit(test_error_nnet)
+
+c(rating_rpart = mean(test_error_rpart), rating_rf = mean(test_error_rf), rating_nnet = mean(test_error_nnet), rating_naive = mean(test_error_naive))
+```
+
+```{r}
+cm_rpart <- confusionMatrix(fitted_rpart_cuisine, test_cuisine_scaled$Rcuisine)
+cm_rf <- confusionMatrix(fitted_rf_cuisine, test_cuisine_scaled$Rcuisine)
+cm_nnet <- confusionMatrix(fitted_nnet_cuisine, test_cuisine_scaled$Rcuisine)
+cm_naive <- confusionMatrix(fitted_naive_cuisine, test_cuisine_scaled$Rcuisine)
+```
+
+RPART:
+```{r}
+cm_rpart
+cm_rpart$byClass
+```
+
+RandomForest:
+```{r}
+cm_rf
+cm_rf$byClass
+```
+
+NNET:
+```{r}
+cm_nnet
+cm_nnet$byClass
+```
+
+Naive Bayes:
+```{r}
+cm_naive
+cm_naive$byClass
 ```
 
 ## Deployment des besten Modells mittels Web Service [10%]
