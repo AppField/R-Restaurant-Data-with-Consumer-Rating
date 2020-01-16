@@ -809,6 +809,44 @@ test_error_nnet <- na.omit(test_error_nnet)
 c(rating_rpart = mean(test_error_rpart), rating_rf = mean(test_error_rf), rating_knn = mean(test_error_knn), rating_nnet = mean(test_error_nnet), rating_naive = mean(test_error_naive))
 ```
 
+```{r}
+cm_rpart <- confusionMatrix(fitted_rpart_rating, test_rating_scaled$rating)
+cm_rf <- confusionMatrix(fitted_rf_rating, test_rating_scaled$rating)
+cm_knn <- confusionMatrix(fitted_knn_rating, test_rating_scaled_na_free$rating)
+cm_nnet <- confusionMatrix(fitted_nnet_rating, test_rating_scaled$rating)
+cm_naive <- confusionMatrix(fitted_naive_rating, test_rating_scaled$rating)
+```
+
+RPART:
+```{r}
+cm_rpart
+cm_rpart$byClass
+```
+
+RandomForest:
+```{r}
+cm_rf
+cm_rf$byClass
+```
+
+KNN:
+```{r}
+cm_knn
+cm_knn$byClass
+```
+
+NNET:
+```{r}
+cm_nnet
+cm_nnet$byClass
+```
+
+Naive Bayes:
+```{r}
+cm_naive
+cm_naive$byClass
+```
+
 #### Generalization error: Cuisine Modelle
 
 ```{r}
