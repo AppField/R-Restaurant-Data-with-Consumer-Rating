@@ -2,7 +2,10 @@
 title: "Restaurant Data with Consumer Rating"
 author: "Roman Mühlfeldner and Ana Stanusic"
 output:
-  pdf_document: default
+  pdf_document: 
+    latex_engine: xelatex
+    number_sections: yes
+    always_allow_html: yes
   html_notebook: default
 ---
 # Data Science Project: Restaurant Data with Customer Rating
@@ -22,7 +25,7 @@ library("class")
 library("e1071")
 library("rpart")
 library("randomForest")
-library(keras)
+library(nnet)
 library(tidyverse)
 library(corrplot)
 ```
@@ -598,6 +601,22 @@ encoded_test_cuisine = as.data.frame(predict(encoder,test_cuisine_scaled))
 # Removing NA
 train_rating_scaled_na_free <- na.omit(train_rating_scaled)
 train_cuisine_scaled_na_free <- na.omit(train_cuisine_scaled)
+
+test_rating_scaled_na_free <- na.omit(test_rating_scaled)
+test_cuisine_scaled_na_free <- na.omit(test_cuisine_scaled)
+
+# Rating KNN prep
+df = data_frame(rating = train_rating_scaled_na_free[,1], smoker = as.matrix(class2ind(train_rating_scaled_na_free[,2])), 
+                drink_level = as.matrix(class2ind(train_rating_scaled_na_free[,3])), 
+                budget = as.matrix(class2ind(train_rating_scaled_na_free[,4])), 
+                birth_year = train_rating_scaled_na_free$birth_year, 
+                Rcuisine = as.matrix(class2ind(train_rating_scaled_na_free$Rcuisine)))
+
+df_test = data_frame(rating = test_rating_scaled_na_free[,1], smoker = as.matrix(class2ind(test_rating_scaled_na_free[,2])), 
+                drink_level = as.matrix(class2ind(test_rating_scaled_na_free[,3])), 
+                budget = as.matrix(class2ind(test_rating_scaled_na_free[,4])), 
+                birth_year = test_rating_scaled_na_free$birth_year, 
+                Rcuisine = as.matrix(class2ind(test_rating_scaled_na_free$Rcuisine)))
 ```
 
 ### Tunen der Modelle
@@ -606,13 +625,6 @@ train_cuisine_scaled_na_free <- na.omit(train_cuisine_scaled)
 
 KNN: 
 ```{r}
-df = data_frame(rating = train_rating_scaled_na_free[,1], smoker = as.matrix(class2ind(train_rating_scaled_na_free[,2])), 
-                drink_level = as.matrix(class2ind(train_rating_scaled_na_free[,3])), 
-                budget = as.matrix(class2ind(train_rating_scaled_na_free[,4])), 
-                birth_year = train_rating_scaled_na_free$birth_year, 
-                Rcuisine = as.matrix(class2ind(train_rating_scaled_na_free$Rcuisine)))
-
-
 tunobj_knn = tune.knn(df[,-1], df$rating,
                       na.action = na.omit,
                       k = 1 : 100,
@@ -699,24 +711,39 @@ Beim Random-Forest Modell wird ntree bei 135 gewählt.
 
 #### Rating Modelle
 ```{r}
-model_rpart <- rpart(rating ~ ., data = train_rating_scaled_na_free, minsplit = 47)
-model_rf <- randomForest(rating ~ ., data = train_rating_scaled_na_free, ntree = 50)
-model_nnet  = nnet(rating ~ ., data = train_rating_scaled_na_free, size = 10, decay = 0.2, linout = TRUE, maxit = 10000)
-model_naive <- naiveBayes(rating ~ ., data = train_rating_scaled_na_free)
+model_rpart_rating <- rpart(rating ~ ., data = train_rating_scaled_na_free, minsplit = 47)
+model_rf_rating <- randomForest(rating ~ ., data = train_rating_scaled_na_free, ntree = 50)
+model_nnet_rating  = nnet(rating ~ ., data = train_rating_scaled_na_free, size = 10, decay = 0.2, linout = TRUE, maxit = 10000)
+model_naive_rating <- naiveBayes(rating ~ ., data = train_rating_scaled_na_free)
 ```
 
 #### Cuisine Modelle
 ```{r}
-model_rpart <- rpart(Rcuisine ~ ., data = train_cuisine_scaled_na_free, minsplit = 71)
-model_rf <- randomForest(Rcuisine ~ ., data = train_cuisine_scaled_na_free, ntree = 135)
-model_nnet  = nnet(Rcuisine ~ ., data = train_cuisine_scaled_na_free, size = 30, decay = 0.2, linout = TRUE, maxit = 10000)
-model_naive <- naiveBayes(Rcuisine ~ ., data = train_cuisine_scaled_na_free)
+model_rpart_cuisine <- rpart(Rcuisine ~ ., data = train_cuisine_scaled_na_free, minsplit = 71)
+model_rf_cuisine <- randomForest(Rcuisine ~ ., data = train_cuisine_scaled_na_free, ntree = 135)
+model_nnet_cuisine  = nnet(Rcuisine ~ ., data = train_cuisine_scaled_na_free, size = 30, decay = 0.2, linout = TRUE, maxit = 10000)
+model_naive_cuisine <- naiveBayes(Rcuisine ~ ., data = train_cuisine_scaled_na_free)
 ```
 
 ### Predict
 
-```{r}
+#### Predict Rating
 
+```{r}
+fitted_rpart_rating <- predict(model_rpart_rating, test_rating_scaled, type = "class")
+fitted_rf_rating <- predict(model_rf_rating, test_rating_scaled, type = "class")
+fitted_nnet_rating <- predict(model_nnet_rating, test_rating_scaled, type = "class")
+fitted_knn_rating <- knn(train = df[, -1], cl = df$rating, test = df_test[, -1])
+fitted_naive_rating <- predict(model_naive_rating, test_rating_scaled)
+```
+
+#### Predict Cuisine
+
+```{r}
+fitted_rpart_cuisine <- predict(model_rpart_cuisine, test_cuisine_scaled, type = "class")
+fitted_rf_cuisine <- predict(model_rf_cuisine, test_cuisine_scaled, type = "class")
+fitted_nnet_cuisine <- predict(model_nnet_cuisine, test_cuisine_scaled, type = "class")
+fitted_naive_cuisine <- predict(model_naive_cuisine, test_cuisine_scaled)
 ```
 
 ### Bewertung der Modelle
@@ -726,7 +753,6 @@ model_naive <- naiveBayes(Rcuisine ~ ., data = train_cuisine_scaled_na_free)
 ```{r}
 
 ```
-
 
 #### Cuisine Modelle
 
