@@ -5,7 +5,6 @@ output:
   pdf_document: 
     latex_engine: xelatex
     number_sections: yes
-    always_allow_html: yes
   html_notebook: default
 ---
 # Data Science Project: Restaurant Data with Customer Rating
@@ -206,7 +205,7 @@ summary(geoplaces)
 m <- leaflet() %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
   addMarkers(lng=geoplaces$longitude, lat=geoplaces$latitude, popup=geoplaces$name)
-m  # Print the map
+#m  # Print the map
 ```
 
 ### Kunden-Daten
@@ -456,7 +455,7 @@ m <- leaflet() %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
   addMarkers(lng=userprofile$longitude, lat=userprofile$latitude, popup=userprofile$userID, icon = customers) %>% 
   addMarkers(lng = geoplaces$longitude, lat = geoplaces$latitude, icon = restaurants, popup = geoplaces$name)
-m  # Print the map
+#m  # Print the map
 ```
 
 Einfluss von dem Trinkverhalten auf das Budget.
@@ -900,5 +899,7 @@ siehe:
  * server.R
 
 ## Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
+siehe app.R
  
 ## Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
+siehe app.R
