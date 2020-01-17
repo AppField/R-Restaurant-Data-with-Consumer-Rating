@@ -4,20 +4,32 @@ require(shinydashboard)
 library(ggplot2)
 library(dplyr)
 
+# DATA
 recommendation <- read.csv('recommendation.csv', stringsAsFactors = F,header=T)
-
-#head(recommendation)
-
+accept <- read.csv('../data/chefmozaccepts.csv')
+cuisine <- read.csv('../data/chefmozcuisine.csv')
+hours <- read.csv('../data/chefmozhours4.csv')
+parking <- read.csv('../data/chefmozparking.csv')
+geoplaces <- read.csv('../data/geoplaces2.csv', na.strings = "?")
+rating <- read.csv('../data/rating_final.csv')
+usercuisine <- read.csv('../data/usercuisine.csv')
+userpayment <- read.csv('../data/userpayment.csv')
+userprofile <- read.csv('../data/userprofile.csv', na.strings = "?")
 
 #Dashboard header carrying the title of the dashboard
-header <- dashboardHeader(title = "Basic Dashboard")  
+header <- dashboardHeader(title = "Customer-Rating Dashboard")  
 
 #Sidebar content of the dashboard
 sidebar <- dashboardSidebar(
     sidebarMenu(
         menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
-        menuItem("Visit-us", icon = icon("send",lib='glyphicon'), 
-                 href = "https://www.salesforce.com")
+        menuItem( "Daten", tabName = "data", icon = icon("list-alt",lib='glyphicon'),
+                  menuSubItem("Restaurant", tabName = "restaurant", icon = icon("cutlery",lib='glyphicon')),
+                  menuSubItem("User", tabName = "user", icon = icon("user",lib='glyphicon')),
+                  menuSubItem("Rating", tabName = "rating", icon = icon("equalizer",lib='glyphicon'))),
+        menuItem( "Machine Learning", tabName = "ml", icon = icon("random",lib='glyphicon'),
+                  menuSubItem("Predicting Rating", tabName = "pred_rating", icon = icon("equalizer",lib='glyphicon')),
+                  menuSubItem("Predicting Cuisine", tabName = "pred_cuisine", icon = icon("cutlery",lib='glyphicon')))
     )
 )
 
@@ -48,13 +60,38 @@ frow2 <- fluidRow(
     
 )
 
-
-
-# combine the two fluid rows to make the body
-body <- dashboardBody(frow1, frow2)
+#BODY
+body <- dashboardBody(
+    tabItems(
+        tabItem(tabName = "dashboard",
+                h2("Dashboard tab content")
+        ),
+        tabItem(tabName = "data",
+                h2("Data tab content")
+        ),
+        tabItem(tabName = "restaurant",
+                h2("restaurant tab content")
+        ),
+        tabItem(tabName = "user",
+                h2("user tab content")
+        ),
+        tabItem(tabName = "rating",
+                h2("rating tab content")
+        ),
+        tabItem(tabName = "ml",
+                h2("ML tab content")
+        ),
+        tabItem(tabName = "pred_rating",
+                h2("rating pred tab content")
+        ),
+        tabItem(tabName = "pred_cuisine",
+                h2("predcuisine tab content")
+        )
+    )
+)
 
 #completing the ui part with dashboardPage
-ui <- dashboardPage(title = 'This is my Page title', header, sidebar, body, skin='red')
+ui <- dashboardPage(title = 'Customer - Rating Dashboard', header, sidebar, body, skin='blue')
 
 # create the server functions for the dashboard  
 server <- function(input, output) { 
@@ -120,9 +157,6 @@ server <- function(input, output) {
                                     ,plot.title = element_text(size=15, face="bold")) + 
             ggtitle("Revenue by Region") + labs(fill = "Region")
     })
-    
-    
-    
 }
 
 
