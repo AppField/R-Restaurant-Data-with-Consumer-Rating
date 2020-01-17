@@ -988,7 +988,9 @@ siehe:
  * server.R
 
 ## Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
+
 siehe app.R
  
 ## Extra-Feature - zB neue Methoden, interaktive Visualisierung [20%]
+
 siehe app.R
