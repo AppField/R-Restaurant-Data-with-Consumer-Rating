@@ -846,6 +846,83 @@ cm_naive
 cm_naive$byClass
 ```
 
+#### Conclusion - Rating
+
+```{r}
+colnames <- c("Naive Bayes", "Knn", "RandomForest", "Rpart", "NNET")
+
+spec_1 <- c(cm_naive$byClass[1, "Specificity"], cm_knn$byClass[1, "Specificity"], cm_rf$byClass[1, "Specificity"], cm_rpart$byClass[1, "Specificity"], cm_nnet$byClass[1, "Specificity"])
+spec_2 <- c(cm_naive$byClass[2, "Specificity"], cm_knn$byClass[2, "Specificity"], cm_rf$byClass[2, "Specificity"], cm_rpart$byClass[2, "Specificity"], cm_nnet$byClass[2, "Specificity"])
+spec_3 <- c(cm_naive$byClass[3, "Specificity"], cm_knn$byClass[3, "Specificity"], cm_rf$byClass[3, "Specificity"], cm_rpart$byClass[3, "Specificity"], cm_nnet$byClass[3, "Specificity"])
+
+prec_1 <- c(cm_naive$byClass[1, "Precision"], cm_knn$byClass[1, "Precision"], cm_rf$byClass[1, "Precision"], cm_rpart$byClass[1, "Precision"], cm_nnet$byClass[1, "Precision"])
+prec_2 <- c(cm_naive$byClass[2, "Precision"], cm_knn$byClass[2, "Precision"], cm_rf$byClass[2, "Precision"], cm_rpart$byClass[2, "Precision"], cm_nnet$byClass[2, "Precision"])
+prec_3 <- c(cm_naive$byClass[3, "Precision"], cm_knn$byClass[3, "Precision"], cm_rf$byClass[3, "Precision"], cm_rpart$byClass[3, "Precision"], cm_nnet$byClass[3, "Precision"])
+
+rec_1 <- c(cm_naive$byClass[1, "Recall"], cm_knn$byClass[1, "Recall"], cm_rf$byClass[1, "Recall"], cm_rpart$byClass[1, "Recall"], cm_nnet$byClass[1, "Recall"])
+rec_2 <- c(cm_naive$byClass[2, "Recall"], cm_knn$byClass[2, "Recall"], cm_rf$byClass[2, "Recall"], cm_rpart$byClass[2, "Recall"], cm_nnet$byClass[2, "Recall"])
+rec_3 <- c(cm_naive$byClass[3, "Recall"], cm_knn$byClass[3, "Recall"], cm_rf$byClass[3, "Recall"], cm_rpart$byClass[3, "Recall"], cm_nnet$byClass[3, "Recall"])
+
+f1_1 <- c(cm_naive$byClass[1, "F1"], cm_knn$byClass[1, "F1"], cm_rf$byClass[1, "F1"], cm_rpart$byClass[1, "F1"], cm_nnet$byClass[1, "F1"])
+f1_2 <- c(cm_naive$byClass[2, "F1"], cm_knn$byClass[2, "F1"], cm_rf$byClass[2, "F1"], cm_rpart$byClass[2, "F1"], cm_nnet$byClass[2, "F1"])
+f1_3 <- c(cm_naive$byClass[3, "F1"], cm_knn$byClass[3, "F1"], cm_rf$byClass[3, "F1"], cm_rpart$byClass[3, "F1"], cm_nnet$byClass[3, "F1"])
+
+acc_1 <- c(cm_naive$byClass[1, "Balanced Accuracy"], cm_knn$byClass[1, "Balanced Accuracy"], 
+           cm_rf$byClass[1, "Balanced Accuracy"], cm_rpart$byClass[1, "Balanced Accuracy"], cm_nnet$byClass[1, "Balanced Accuracy"])
+acc_2 <- c(cm_naive$byClass[2, "Balanced Accuracy"], cm_knn$byClass[2, "Balanced Accuracy"], 
+           cm_rf$byClass[2, "Balanced Accuracy"], cm_rpart$byClass[2, "Balanced Accuracy"], cm_nnet$byClass[2, "Balanced Accuracy"])
+acc_3 <- c(cm_naive$byClass[3, "Balanced Accuracy"], cm_knn$byClass[3, "Balanced Accuracy"], 
+           cm_rf$byClass[3, "Balanced Accuracy"], cm_rpart$byClass[3, "Balanced Accuracy"], cm_nnet$byClass[3, "Balanced Accuracy"])
+
+overall_acc <- c(cm_naive$overall["Accuracy"], cm_knn$overall["Accuracy"], cm_rf$overall["Accuracy"], cm_nnet$overall["Accuracy"], cm_nnet$overall["Accuracy"])
+
+comp_all = data.frame(colnames, spec_1, spec_2, spec_3, prec_1, prec_2, prec_3, f1_1, f1_2, f1_3, acc_1, acc_2, acc_3)
+comp_all
+
+comp_spec = data.frame(colnames, spec_1, spec_2, spec_3)
+colnames(comp_spec) <- c("Model", "Specificity Class-1", "Specificity Class-2", "Specificity Class-3")
+
+comp_prec = data.frame(colnames, prec_1, prec_2, prec_3)
+colnames(comp_prec) <- c("Model", "Precision Class-1", "Precision Class-2", "Precision Class-3")
+
+comp_rec = data.frame(colnames, rec_1, rec_2, rec_3)
+colnames(comp_rec) <- c("Model", "Recall Class-1", "Recall Class-2", "Recall Class-3")
+
+comp_f1 = data.frame(colnames, f1_1, f1_2, f1_3)
+colnames(comp_f1) <- c("Model", "F1 Class-1", "F1 Class-2", "F1 Class-3")
+
+comp_acc = data.frame(colnames, acc_1, acc_2, acc_3)
+colnames(comp_acc) <- c("Model", "Accuracy Class-1", "Accuracy Class-2", "Accuracy Class-3")
+
+comp_all_acc = data.frame(colnames, overall_acc)
+colnames(comp_all_acc) <- c("Model", "Accuracy Overall")
+```
+
+Overall Accuracy:
+```{r}
+plot(comp_all_acc)
+```
+
+Specification:
+```{r}
+comp_spec
+```
+
+Recall:
+```{r}
+comp_rec
+```
+
+Precision:
+```{r}
+comp_prec
+```
+
+F1-Value:
+```{r}
+comp_f1
+```
+
 #### Generalization error: Cuisine Modelle
 
 ```{r}
@@ -857,7 +934,7 @@ test_error_naive <- fitted_naive_cuisine != test_cuisine_scaled_na_free$Rcuisine
 test_error_rf <- na.omit(test_error_rf)
 test_error_nnet <- na.omit(test_error_nnet)
 
-c(rating_rpart = mean(test_error_rpart), rating_rf = mean(test_error_rf), rating_nnet = mean(test_error_nnet), rating_naive = mean(test_error_naive))
+c(cuisine_rpart = mean(test_error_rpart), cuisine_rf = mean(test_error_rf), cuisine_nnet = mean(test_error_nnet), cuisine_naive = mean(test_error_naive))
 ```
 
 ```{r}
@@ -891,6 +968,18 @@ cm_naive
 cm_naive$byClass
 ```
 
+#### Conclusion - Cuisine
+
+```{r}
+colnames <- c("Naive Bayes", "RandomForest", "Rpart", "NNET")
+
+overall_acc <- c(cm_naive$overall["Accuracy"], cm_rf$overall["Accuracy"], cm_nnet$overall["Accuracy"], cm_nnet$overall["Accuracy"])
+
+comp_all_acc = data.frame(colnames, overall_acc)
+colnames(comp_all_acc) <- c("Model", "Accuracy Overall")
+
+plot(comp_all_acc)
+```
 
 ## Deployment des besten Modells mittels Web Service [10%]
 
