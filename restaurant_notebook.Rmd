@@ -528,7 +528,7 @@ ggplot(rating_detailed_price, aes(rating, colour = price)) + geom_density() + fa
 ## Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
 
 Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine, smoker, budget, drinking_level, birth_year.
-Als Methoden wurden Rpart, RandomForest, NaiveBayes, KNN und NNET gewählt, die miteinander verglichen werden.
+Als Methoden wurden Rpart, RandomForest, NaiveBayes, KNN und NNET gewählt, die miteinander verglichen werden. (User-Daten)
 
 Für die Modelle wird die Cuisine vorhergesagt aufgrund der Prädiktoren smoker, drink_level, budget, personality vom User Profile.
 Als Methoden wurden Rpart, RandomForest, NaiveBayes und NNET gewählt, die miteinander verglichen werden.
@@ -538,6 +538,7 @@ Als Methoden wurden Rpart, RandomForest, NaiveBayes und NNET gewählt, die mitei
 Data Values
 
 ```{r}
+cuisine_detail
 ## Rating Data
 rating_user_detail <- rating %>% 
   join(userprofile) %>% 
