@@ -141,29 +141,59 @@ body <- dashboardBody(
                 ),
         ),
         tabItem(tabName = "restaurant",
-                h2("Data tab content"),
-                box(
-                    title = "Inputs", 
-                    status = "primary",
-                    sliderInput("slider", "Slider input:", 1, 100, 50),
-                    selectInput("select_", "label", "choices", selected = NULL, multiple = FALSE,
-                                selectize = TRUE, width = NULL, size = NULL)
+                h2("Restaurant Daten"),
+                fluidRow(
+                    valueBoxOutput("datasets_restaurant"),
+                    valueBoxOutput("count_restaurants"),
+                    valueBoxOutput("count_cuisines"),
+                ),
+                fluidRow(
+                    box(
+                        title = "Beschreibung", 
+                        status = "success",
+                        "Die Restaurant Daten setzen sich zusammen aus:", br(),
+                        " - Geodata", br(),
+                        " - Payment Acceptance", br(),
+                        " - Parking Possibilities", br(),
+                        " - Cuisine Variations", br(),
+                        " - Working Hours´"
+                    ),
+                    box(
+                        title = "Filter Optionen", 
+                        status = "success",
+                        selectInput("select_dia", "Diagramm Möglichkeiten", c("Verteilung-Cuisines", "Parking-Optionen"), selected = "Verteilung-Cuisines", multiple = FALSE,
+                                    selectize = TRUE, width = NULL, size = NULL),
+                        selectInput("select_cuisine", "Cuisine", c("Alle", "Persian","American", "Asian","International", "South_American European", "European", "African"), selected = "Alle", multiple = FALSE,
+                                    selectize = TRUE, width = NULL, size = NULL)
+                    ),
+                ),
+                fluidRow(
+                    column(width = 12,
+                           box(title = "Diagramm", 
+                               status = "primary", 
+                               solidHeader = FALSE,
+                               width = 2.4,
+                               renderPlot("restaurant_detail_data")
+                        )
+                    ),
                 ),
         ),
         tabItem(tabName = "user",
-                h2("user tab content")
+                h2("User Daten"),
+                ""
         ),
         tabItem(tabName = "rating",
-                h2("rating tab content")
+                h2("Rating Daten"),
+                ""
         ),
         tabItem(tabName = "pred_overview",
-                h2("rating pred tab content")
+                h2("Overview: Predictions")
         ),
         tabItem(tabName = "pred_rating",
-                h2("rating pred tab content")
+                h2("Predicting Rating")
         ),
         tabItem(tabName = "pred_cuisine",
-                h2("predcuisine tab content")
+                h2("Predicting Cuisine")
         )
     )
 )
@@ -213,7 +243,7 @@ server <- function(input, output) {
     output$datasets <- renderValueBox({
         valueBox(
             formatC("9", format="d", big.mark=','),
-            paste('Datensets'),
+            paste('Datasets'),
             icon = icon("list-alt",lib='glyphicon'),
             color = "purple")
     })
@@ -265,6 +295,44 @@ server <- function(input, output) {
     output$rating_overview_grouped_cuisine <- renderPlot({
         ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +  
             geom_smooth(method = "lm", se=F) + ggtitle("Relation Food Rating and Service Rating Grouped By Cuisine")
+    })
+    
+    # Daten Restaurant Tab
+    output$datasets_restaurant <- renderValueBox({
+        valueBox(
+            formatC("5", format="d", big.mark=','),
+            paste('Datasets'),
+            icon = icon("list-alt",lib='glyphicon'),
+            color = "purple")
+    })
+    
+    output$count_restaurants <- renderValueBox({
+        if(input$select_cuisine != "Alle"){
+            count_restaurants_val <- geoplaces %>% 
+                join(cuisine) %>% 
+                filter(Rcuisine == input$select_cuisine)
+        }else{
+            count_restaurants_val <- geoplaces
+        }
+        valueBox(
+            formatC(nrow(count_restaurants_val), format="d", big.mark=','),
+            paste('Restaurants: ', input$select_cuisine),
+            icon = icon("home",lib='glyphicon'),
+            color = "green")
+    })
+    
+    output$count_cuisines <- renderValueBox({
+        valueBox(
+            formatC(7, format="d", big.mark=','),
+            paste('Küchen Ausprägungen'),
+            # paste('Datensätze (User):',rating$rating),
+            icon = icon("cutlery",lib='glyphicon'),
+            color = "yellow")
+    })
+    
+    output$restaurant_detail_data <- renderPlot({
+        ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +  
+            geom_smooth(method = "lm", se=F) + ggtitle("", input$select_cuisine)
     })
 }
 
