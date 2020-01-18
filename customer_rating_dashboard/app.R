@@ -180,20 +180,43 @@ body <- dashboardBody(
         ),
         tabItem(tabName = "user",
                 h2("User Daten"),
-                ""
+                
         ),
         tabItem(tabName = "rating",
                 h2("Rating Daten"),
                 ""
         ),
         tabItem(tabName = "pred_overview",
-                h2("Overview: Predictions")
+                h2("Overview: Predictions"),
+                fluidRow(
+                    column(width = 12,
+                           box(title = "Beschreibung", 
+                               status = "success", 
+                               solidHeader = FALSE,
+                               width = 2.4,
+                               "In dem Projekt wurden zwei Modelle entwickelt um das Rating und die Cuisine von einem Kunden vorherzusagen.", br(),
+                               "Für diese Modelle wurden verschiedene Methoden herangezogen. Diese daraus entstandenen Modelle wurden getunen und im folgenden gefittet mit Trainingsdaten.
+                               Die verwendeten Datensätze wurden jeweils in Trainings- und Testdaten aufgeteilt im Verhältnis 1:2. Die Testdaten wurden daraufhin herangezogen, um die Performance
+                               der Modelle miteinander zu vergleichen."
+                           )
+                    ),
+                ),
         ),
         tabItem(tabName = "pred_rating",
-                h2("Predicting Rating")
+                h2("Predicting Rating"),
+                fluidRow(
+                    valueBoxOutput("methods_rating"),
+                    valueBoxOutput("best_acc_rating"),
+                    valueBoxOutput("selected_method_rating"),
+                ),
         ),
         tabItem(tabName = "pred_cuisine",
-                h2("Predicting Cuisine")
+                h2("Predicting Cuisine"),
+                fluidRow(
+                    valueBoxOutput("methods_cuisine"),
+                    valueBoxOutput("best_acc_cuisine"),
+                    valueBoxOutput("selected_method_cuisine"),
+                ),
         )
     )
 )
@@ -333,6 +356,57 @@ server <- function(input, output) {
     output$restaurant_detail_data <- renderPlot({
         ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +  
             geom_smooth(method = "lm", se=F) + ggtitle("", input$select_cuisine)
+    })
+    
+    # Prediction Rating
+    output$methods_rating <- renderValueBox({
+        valueBox(
+            formatC("5", format="d", big.mark=','),
+            paste('verwendete Methoden'),
+            icon = icon("tasks",lib='glyphicon'),
+            color = "purple")
+    })
+    
+    output$best_acc_rating <- renderValueBox({
+        valueBox(
+            formatC("52%"),
+            paste('Overall Accuracy'),
+            icon = icon("stats",lib='glyphicon'),
+            color = "green")
+    })
+    
+    output$selected_method_rating <- renderValueBox({
+        valueBox(
+            formatC("50%", format="d", big.mark=','),
+            paste('Overall Accuracy Test'),
+            icon = icon("stats",lib='glyphicon'),
+            color = "yellow")
+    })
+
+    # Predicting Cuisine
+    output$methods_cuisine <- renderValueBox({
+        valueBox(
+            formatC("4", format="d", big.mark=','),
+            paste('verwendete Methoden'),
+            icon = icon("tasks",lib='glyphicon'),
+            color = "purple")
+    })
+    
+    output$best_acc_cuisine <- renderValueBox({
+        valueBox(
+            formatC("50%", format="d", big.mark=','),
+            paste('Overall Accuracy Training'),
+            icon = icon("stats",lib='glyphicon'),
+            color = "green")
+    })
+    
+    output$selected_method_cuisine <- renderValueBox({
+        valueBox(
+            formatC("50%", format="d", big.mark=','),
+            paste('Overall Accuracy Test'),
+            # paste('Datensätze (User):',rating$rating),
+            icon = icon("stats",lib='glyphicon'),
+            color = "yellow")
     })
 }
 
