@@ -190,24 +190,62 @@ body <- dashboardBody(
                         title = "Beschreibung", 
                         status = "success",
                         "Die User Daten setzen sich zusammen aus:", br(),
-                        " - usercuisine", br(),
-                        " - Payment userpayment", br(),
-                        " - userprofile"
+                        " - Bevorzugte Küchen", br(),
+                        " - Payment", br(),
+                        " - Profil"
                     ),
                     box(
                         title = "Filter Optionen", 
                         status = "success",
-                        selectInput("select_dia_user", "Diagramm Möglichkeiten", c("Verteilung-Cuisines", "Parking-Optionen"), selected = "Verteilung-Cuisines", multiple = FALSE,
+                        selectInput("select_dia_user", "Diagramm Möglichkeiten", c("Budget-Trinkverhalten", "Altersverteilung"), selected = "Budget-Trinkverhalten", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
                         selectInput("select_cuisine_user", "Cuisine", c("Alle", "Persian","American", "Asian","International", "South_American European", "European", "African"), selected = "Alle", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL)
                     ),
                 ),
-                
+                fluidRow(
+                    column(width = 12,
+                           box(title = "Diagramm", 
+                               status = "primary", 
+                               solidHeader = FALSE,
+                               width = 2.4,
+                               plotOutput("user_detail_data")
+                           )
+                    ),
+                ),
         ),
         tabItem(tabName = "rating",
                 h2("Rating Daten"),
-                ""
+                fluidRow(
+                    valueBoxOutput("datasets_rating"),
+                    valueBoxOutput("count_ratings"),
+                    valueBoxOutput("count_tmp"),
+                ),
+                fluidRow(
+                    box(
+                        title = "Beschreibung", 
+                        status = "success",
+                        "Die Rating Daten bestehen aus einem Datensatz."
+                    ),
+                    box(
+                        title = "Filter Optionen", 
+                        status = "success",
+                        selectInput("select_dia_rating", "Diagramm Möglichkeiten", c("Rating-Alter-Cuisine", "Rating-Preisklasse", "Rating-Cuisine"), selected = "Rating-Alter-Cuisine", multiple = FALSE,
+                                    selectize = TRUE, width = NULL, size = NULL),
+                        selectInput("select_cuisine_rating", "Cuisine", c("Alle", "Persian","American", "Asian","International", "South_American European", "European", "African"), selected = "Alle", multiple = FALSE,
+                                    selectize = TRUE, width = NULL, size = NULL)
+                    ),
+                ),
+                fluidRow(
+                    column(width = 12,
+                           box(title = "Diagramm", 
+                               status = "primary", 
+                               solidHeader = FALSE,
+                               width = 2.4,
+                               plotOutput("rating_detail_data")
+                           )
+                    ),
+                ),
         ),
         tabItem(tabName = "pred_overview",
                 h2("Overview: Predictions"),
@@ -472,6 +510,102 @@ server <- function(input, output) {
                 )
             }
             if(req(input$select_cuisine_restaurant) == "Alle") {print(
+                ggplot(detailed_price, aes(x = price, fill=price)) + geom_bar() + facet_wrap(.~Rcuisine)
+            )}
+        }  
+    })
+    
+    # User Daten Tab
+    output$datasets_user <- renderValueBox({
+        valueBox(
+            formatC("4", format="d", big.mark=','),
+            paste('Datasets'),
+            icon = icon("list-alt",lib='glyphicon'),
+            color = "purple")
+    })
+    
+    output$count_users <- renderValueBox({
+        if(input$select_cuisine_user != "Alle"){
+            count_users_val <- userprofile %>% 
+                join(usercuisine) %>% 
+                filter(Rcuisine == input$select_cuisine_user)
+        }else{
+            count_users_val <- userprofile
+        }
+        valueBox(
+            formatC(nrow(count_users_val), format="d", big.mark=','),
+            paste('Kunden: ', input$select_cuisine_user),
+            icon = icon("home",lib='glyphicon'),
+            color = "green")
+    })
+    
+    output$count_cuisines_user <- renderValueBox({
+        valueBox(
+            formatC(8, format="d", big.mark=','),
+            paste('Küchen Ausprägungen'),
+            # paste('Datensätze (User):',rating$rating),
+            icon = icon("cutlery",lib='glyphicon'),
+            color = "yellow")
+    })
+    
+    output$user_detail_data <- renderPlot({
+        if (input$select_dia_user == "Budget-Trinkverhalten")  {
+            if(req(input$select_cuisine_user) != "Alle") {
+                user_detail_budget <- user_detail %>% 
+                    filter(Rcuisine == input$select_cuisine_user)
+                
+                print(
+                    ggplot(user_detail_budget) + geom_mosaic(aes(product(drink_level,budget), fill = drink_level))
+                )
+            }
+            if(req(input$select_cuisine_user) == "Alle") {print(
+                ggplot(user_detail) + geom_mosaic(aes(product(drink_level,budget), fill = drink_level)) + facet_wrap(.~Rcuisine, ncol=2)
+            )}
+        }  
+        if (input$select_dia_user == "Altersverteilung")  {
+            if(req(input$select_cuisine_user) != "Alle") {
+                user_detail_age <- user_detail %>% 
+                    filter(Rcuisine == input$select_cuisine_user)
+            }
+            if(req(input$select_cuisine_user) == "Alle") {print(
+                user_detail_age <- user_detail
+            )}
+            
+            ggplot(user_detail_age, aes(birth_year, fill=Rcuisine)) + geom_bar() + coord_flip()
+        }  
+    })
+    
+    # Rating Daten Tab
+    
+    output$rating_detail_data <- renderPlot({
+        if (input$select_dia_rating == "Rating-Alter-Cuisine")  {print(
+            ggplot(cuisine, aes(x = Rcuisine, fill=Rcuisine)) + geom_bar()
+        )}   
+        if (input$select_dia_rating == "Rating-Preisklasse")  {
+            if(req(input$select_cuisine_rating) != "Alle") {
+                parking_filtered <- parking %>% 
+                    join(geoplaces) %>% 
+                    join(cuisine) %>% 
+                    filter(Rcuisine == input$select_cuisine_rating)
+                
+                print(
+                    print(ggplot(parking_filtered, aes(x = parking_lot, fill=parking_lot)) + geom_bar())
+                )
+            }
+            if(req(input$select_cuisine_rating) == "Alle") {print(
+                print(ggplot(parking, aes(x = parking_lot, fill=parking_lot)) + geom_bar())
+            )}
+        }  
+        if (input$select_dia_rating == "Rating-Cuisine")  {
+            if(req(input$select_cuisine_rating) != "Alle") {
+                detailed_price_filtered <- detailed_price %>% 
+                    filter(Rcuisine == input$select_cuisine_rating)
+                
+                print(
+                    ggplot(detailed_price_filtered, aes(x = price, fill=price)) + geom_bar()
+                )
+            }
+            if(req(input$select_cuisine_rating) == "Alle") {print(
                 ggplot(detailed_price, aes(x = price, fill=price)) + geom_bar() + facet_wrap(.~Rcuisine)
             )}
         }  
