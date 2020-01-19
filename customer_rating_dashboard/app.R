@@ -392,13 +392,13 @@ body <- dashboardBody(
                         title = "Predicting Rating",
                         status = "primary",
                         collapsible = TRUE, 
-                        "ASdasd"
+                        plotOutput("overview_acc_pred_rating")
                     ),
                     box(
                         title = "Predicting Cuisine",
                         status = "primary", 
                         collapsible = TRUE,
-                        "sad"
+                        plotOutput("overview_acc_pred_cuisine")
                     ) 
                 ),
         ),
@@ -424,14 +424,30 @@ body <- dashboardBody(
                 ),
                 fluidRow(
                     box(
-                        title = "Service Rating ~ Food Rating",
+                        title = "Methoden Vergleich (Train)",
                         status = "primary",
-                        collapsible = TRUE,
+                        collapsible = TRUE, 
+                        dataTableOutput("pred_rating_table_methods_train")
                     ),
                     box(
-                        title = "Anzahl der Restaurants je Küche",
+                        title = "Predicting Cuisine",
                         status = "primary", 
                         collapsible = TRUE,
+                        "sad"
+                    ) 
+                ),
+                fluidRow(
+                    box(
+                        title = "Methoden Vergleich (Test)",
+                        status = "primary",
+                        collapsible = TRUE, 
+                        dataTableOutput("pred_rating_table_methods_test")
+                    ),
+                    box(
+                        title = "Predicting Cuisine",
+                        status = "primary", 
+                        collapsible = TRUE,
+                        "sad"
                     ) 
                 ),
         ),
@@ -457,14 +473,30 @@ body <- dashboardBody(
                 ),
                 fluidRow(
                     box(
-                        title = "Service Rating ~ Food Rating",
+                        title = "Methoden Vergleich (Train)",
                         status = "primary",
-                        collapsible = TRUE,
+                        collapsible = TRUE, 
+                        dataTableOutput("pred_cuisine_table_methods_train")
                     ),
                     box(
-                        title = "Anzahl der Restaurants je Küche",
+                        title = "Predicting Cuisine (Train)",
                         status = "primary", 
                         collapsible = TRUE,
+                        "sad"
+                    ) 
+                ),
+                fluidRow(
+                    box(
+                        title = "Methoden Vergleich (Test)",
+                        status = "primary",
+                        collapsible = TRUE, 
+                        dataTableOutput("pred_cuisine_table_methods_test")
+                    ),
+                    box(
+                        title = "Predicting Cuisine",
+                        status = "primary", 
+                        collapsible = TRUE,
+                        "sad"
                     ) 
                 ),
         )
