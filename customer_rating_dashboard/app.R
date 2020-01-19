@@ -161,9 +161,9 @@ body <- dashboardBody(
                     box(
                         title = "Filter Optionen", 
                         status = "success",
-                        selectInput("select_dia", "Diagramm Möglichkeiten", c("Verteilung-Cuisines", "Parking-Optionen"), selected = "Verteilung-Cuisines", multiple = FALSE,
+                        selectInput("select_dia_restaurant", "Diagramm Möglichkeiten", c("Verteilung-Cuisines", "Parking-Optionen", "Preisklassen"), selected = "Verteilung-Cuisines", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
-                        selectInput("select_cuisine", "Cuisine", c("Alle", "Persian","American", "Asian","International", "South_American European", "European", "African"), selected = "Alle", multiple = FALSE,
+                        selectInput("select_cuisine_restaurant", "Cuisine (Außer bei Verteilung-Cuisines)", c("Alle", "Persian","American", "Asian","International", "South_American European", "European", "African"), selected = "Alle", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL)
                     ),
                 ),
@@ -180,6 +180,29 @@ body <- dashboardBody(
         ),
         tabItem(tabName = "user",
                 h2("User Daten"),
+                fluidRow(
+                    valueBoxOutput("datasets_user"),
+                    valueBoxOutput("count_users"),
+                    valueBoxOutput("count_cuisines_user"),
+                ),
+                fluidRow(
+                    box(
+                        title = "Beschreibung", 
+                        status = "success",
+                        "Die User Daten setzen sich zusammen aus:", br(),
+                        " - usercuisine", br(),
+                        " - Payment userpayment", br(),
+                        " - userprofile"
+                    ),
+                    box(
+                        title = "Filter Optionen", 
+                        status = "success",
+                        selectInput("select_dia_user", "Diagramm Möglichkeiten", c("Verteilung-Cuisines", "Parking-Optionen"), selected = "Verteilung-Cuisines", multiple = FALSE,
+                                    selectize = TRUE, width = NULL, size = NULL),
+                        selectInput("select_cuisine_user", "Cuisine", c("Alle", "Persian","American", "Asian","International", "South_American European", "European", "African"), selected = "Alle", multiple = FALSE,
+                                    selectize = TRUE, width = NULL, size = NULL)
+                    ),
+                ),
                 
         ),
         tabItem(tabName = "rating",
@@ -201,6 +224,20 @@ body <- dashboardBody(
                            )
                     ),
                 ),
+                fluidRow(
+                    box(
+                        title = "Predicting Rating",
+                        status = "primary",
+                        collapsible = TRUE, 
+                        "ASdasd"
+                    ),
+                    box(
+                        title = "Predicting Cuisine",
+                        status = "primary", 
+                        collapsible = TRUE,
+                        "sad"
+                    ) 
+                ),
         ),
         tabItem(tabName = "pred_rating",
                 h2("Predicting Rating"),
@@ -209,6 +246,31 @@ body <- dashboardBody(
                     valueBoxOutput("best_acc_rating"),
                     valueBoxOutput("selected_method_rating"),
                 ),
+                fluidRow(
+                    column(width = 12,
+                           box(title = "Beschreibung", 
+                               status = "success", 
+                               solidHeader = FALSE,
+                               width = 2.4,
+                               "In dem Projekt wurden zwei Modelle entwickelt um das Rating und die Cuisine von einem Kunden vorherzusagen.", br(),
+                               "Für diese Modelle wurden verschiedene Methoden herangezogen. Diese daraus entstandenen Modelle wurden getunen und im folgenden gefittet mit Trainingsdaten.
+                               Die verwendeten Datensätze wurden jeweils in Trainings- und Testdaten aufgeteilt im Verhältnis 1:2. Die Testdaten wurden daraufhin herangezogen, um die Performance
+                               der Modelle miteinander zu vergleichen."
+                           )
+                    ),
+                ),
+                fluidRow(
+                    box(
+                        title = "Service Rating ~ Food Rating",
+                        status = "primary",
+                        collapsible = TRUE,
+                    ),
+                    box(
+                        title = "Anzahl der Restaurants je Küche",
+                        status = "primary", 
+                        collapsible = TRUE,
+                    ) 
+                ),
         ),
         tabItem(tabName = "pred_cuisine",
                 h2("Predicting Cuisine"),
@@ -216,6 +278,31 @@ body <- dashboardBody(
                     valueBoxOutput("methods_cuisine"),
                     valueBoxOutput("best_acc_cuisine"),
                     valueBoxOutput("selected_method_cuisine"),
+                ),
+                fluidRow(
+                    column(width = 12,
+                           box(title = "Beschreibung", 
+                               status = "success", 
+                               solidHeader = FALSE,
+                               width = 2.4,
+                               "In dem Projekt wurden zwei Modelle entwickelt um das Rating und die Cuisine von einem Kunden vorherzusagen.", br(),
+                               "Für diese Modelle wurden verschiedene Methoden herangezogen. Diese daraus entstandenen Modelle wurden getunen und im folgenden gefittet mit Trainingsdaten.
+                               Die verwendeten Datensätze wurden jeweils in Trainings- und Testdaten aufgeteilt im Verhältnis 1:2. Die Testdaten wurden daraufhin herangezogen, um die Performance
+                               der Modelle miteinander zu vergleichen."
+                           )
+                    ),
+                ),
+                fluidRow(
+                    box(
+                        title = "Service Rating ~ Food Rating",
+                        status = "primary",
+                        collapsible = TRUE,
+                    ),
+                    box(
+                        title = "Anzahl der Restaurants je Küche",
+                        status = "primary", 
+                        collapsible = TRUE,
+                    ) 
                 ),
         )
     )
@@ -261,6 +348,8 @@ server <- function(input, output) {
                   food_rating = mean(food_rating),
                   service_rating = mean(food_rating))
     
+    detailed_price <- geoplaces %>% 
+        join(cuisine)
     
     # Dashboard Tab
     output$datasets <- renderValueBox({
@@ -330,23 +419,23 @@ server <- function(input, output) {
     })
     
     output$count_restaurants <- renderValueBox({
-        if(input$select_cuisine != "Alle"){
+        if(input$select_cuisine_restaurant != "Alle"){
             count_restaurants_val <- geoplaces %>% 
                 join(cuisine) %>% 
-                filter(Rcuisine == input$select_cuisine)
+                filter(Rcuisine == input$select_cuisine_restaurant)
         }else{
             count_restaurants_val <- geoplaces
         }
         valueBox(
             formatC(nrow(count_restaurants_val), format="d", big.mark=','),
-            paste('Restaurants: ', input$select_cuisine),
+            paste('Restaurants: ', input$select_cuisine_restaurant),
             icon = icon("home",lib='glyphicon'),
             color = "green")
     })
     
     output$count_cuisines <- renderValueBox({
         valueBox(
-            formatC(7, format="d", big.mark=','),
+            formatC(8, format="d", big.mark=','),
             paste('Küchen Ausprägungen'),
             # paste('Datensätze (User):',rating$rating),
             icon = icon("cutlery",lib='glyphicon'),
@@ -354,13 +443,38 @@ server <- function(input, output) {
     })
     
     output$restaurant_detail_data <- renderPlot({
-        p1 <- ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +  
-            geom_smooth(method = "lm", se=F) + ggtitle("", input$select_cuisine)
         
-        if (input$select_dia == "Verteilung-Cuisines")  {print(p1)}   
-        if (input$select_dia == "plot 2")  {print(p1)}  
-        if (input$select_dia == "plot 3")  {print(p1)}  
-        if (input$select_dia == "plot 4")  {print(p1)}
+        if (input$select_dia_restaurant == "Verteilung-Cuisines")  {print(
+                ggplot(cuisine, aes(x = Rcuisine, fill=Rcuisine)) + geom_bar()
+        )}   
+        if (input$select_dia_restaurant == "Parking-Optionen")  {
+            if(req(input$select_cuisine_restaurant) != "Alle") {
+                parking_filtered <- parking %>% 
+                    join(geoplaces) %>% 
+                    join(cuisine) %>% 
+                    filter(Rcuisine == input$select_cuisine_restaurant)
+                
+                print(
+                    print(ggplot(parking_filtered, aes(x = parking_lot, fill=parking_lot)) + geom_bar())
+                )
+            }
+            if(req(input$select_cuisine_restaurant) == "Alle") {print(
+                print(ggplot(parking, aes(x = parking_lot, fill=parking_lot)) + geom_bar())
+            )}
+        }  
+        if (input$select_dia_restaurant == "Preisklassen")  {
+            if(req(input$select_cuisine_restaurant) != "Alle") {
+                detailed_price_filtered <- detailed_price %>% 
+                    filter(Rcuisine == input$select_cuisine_restaurant)
+                
+                print(
+                    ggplot(detailed_price_filtered, aes(x = price, fill=price)) + geom_bar()
+                )
+            }
+            if(req(input$select_cuisine_restaurant) == "Alle") {print(
+                ggplot(detailed_price, aes(x = price, fill=price)) + geom_bar() + facet_wrap(.~Rcuisine)
+            )}
+        }  
     })
     
     # Prediction Rating
