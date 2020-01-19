@@ -28,21 +28,147 @@ usercuisine <- read.csv('../data/usercuisine.csv')
 userpayment <- read.csv('../data/userpayment.csv')
 userprofile <- read.csv('../data/userprofile.csv', na.strings = "?")
 
-cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Japanese"="Asian", "Chinese"="Asian","Sushi"="Asian", "Korean"="Asian","Mongolian"="Asian", "Thai"="Asian","Asia"="Asian", "Vietnamese"="Asian", "Deli-Sandwiches"="Asian","Southeast_Asian"="Asian","Burmese"="Asian", "Cambodian"="Asian", "Malaysian"="Asian", "Dim_Sum"="Asian", "Indonesian"="Asian"))
-cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Dutch-Belgian"="European","Continental-European"="European","Greek"="European","Spanish"="European", "French"="European","German"="European", "Italian"="European","Polish"="European", "Pizzeria"="European","Dessert-Ice_Cream"="European", "Seafood"="European","British"="European","Irish"="European","Swiss"="European","Filipino"="European", "Austrian"="European", "Hungarian"="European","Portuguese"="European", "Romanian"="European", "Basque"="European", "Scandinavian"="European", "Russian-Ukrainian"="European"))
-cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Ethiopian"="African","African"="African","North_African"="African","Israeli"="African", "Jamaican"="African", "Lebanese"="African", "Tibetan"="African", "Tunisian"="African", "Middle_Eastern"="African", "Moroccan"="African"))
-cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Barbecue"="American","Hot_Dogs"="American","Steaks"="American", "American"="American","Fast_Food"="American","Burgers"="American","California"="American", "Southwestern"="American","Game"="American","Diner"="American","Doughnuts"="American","Pacific_Northwest"="American","Cajun-Creole"="American","Pacific_Rim"="American","Canadian"="American","Hawaiian"="American", "Indigenous"="American"))
-cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Persian"="Persian", "Mediterranean"="Persian","Turkish"="Persian","Afghan"="Persian","Armenian"="Persian","Indian-Pakistani"="Persian"))
-cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Brazilian"="South_American","Caribbean"="South_American", "Southern"="South_American","Mexican"="South_American","Latin_American"="South_American", "Peruvian"="South_American","Tapas"="South_American", "Tex-Mex"="South_American","Chilean"="South_American", "Cuban"="South_American"))
-cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Bar"="International","Contemporary"="International", "Fine_Dining"="International","Vegetarian"="International", "Bakery"="International","Cafe-Coffee_Shop"="International","Organic-Healthy"="International","Juice"="International","Soup"="International","Bagels"="International", "Bar_Pub_Brewery"="International","Breakfast-Brunch"="International", "Cafeteria"="International","Family"="International","Regional"="International","Eclectic"="International", "Fusion"="International","Tea_House"="International", "Australian"="International","Kosher"="International", "Polynesian"="International"))
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Japanese"="Asian", "Chinese"="Asian",
+                                               "Sushi"="Asian", "Korean"="Asian",
+                                               "Mongolian"="Asian", "Thai"="Asian",
+                                               "Asia"="Asian", "Vietnamese"="Asian",
+                                               "Deli-Sandwiches"="Asian"))
 
-usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Japanese"="Asian", "Chinese"="Asian","Sushi"="Asian", "Korean"="Asian","Mongolian"="Asian", "Thai"="Asian","Asia"="Asian", "Vietnamese"="Asian", "Deli-Sandwiches"="Asian","Southeast_Asian"="Asian","Burmese"="Asian", "Cambodian"="Asian", "Malaysian"="Asian", "Dim_Sum"="Asian", "Indonesian"="Asian"))
-usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Dutch-Belgian"="European","Continental-European"="European","Greek"="European","Spanish"="European", "French"="European","German"="European", "Italian"="European","Polish"="European", "Pizzeria"="European","Dessert-Ice_Cream"="European", "Seafood"="European","British"="European","Irish"="European","Swiss"="European","Filipino"="European", "Austrian"="European", "Hungarian"="European","Portuguese"="European", "Romanian"="European", "Basque"="European", "Scandinavian"="European", "Russian-Ukrainian"="European"))
-usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Ethiopian"="African","African"="African","North_African"="African","Israeli"="African", "Jamaican"="African", "Lebanese"="African", "Tibetan"="African", "Tunisian"="African", "Middle_Eastern"="African", "Moroccan"="African"))
-usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Barbecue"="American","Hot_Dogs"="American","Steaks"="American", "American"="American","Fast_Food"="American","Burgers"="American","California"="American", "Southwestern"="American","Game"="American","Diner"="American","Doughnuts"="American","Pacific_Northwest"="American","Cajun-Creole"="American","Pacific_Rim"="American","Canadian"="American","Hawaiian"="American", "Indigenous"="American"))
-usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Persian"="Persian", "Mediterranean"="Persian","Turkish"="Persian","Afghan"="Persian","Armenian"="Persian","Indian-Pakistani"="Persian"))
-usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Brazilian"="South_American","Caribbean"="South_American", "Southern"="South_American","Mexican"="South_American","Latin_American"="South_American", "Peruvian"="South_American","Tapas"="South_American", "Tex-Mex"="South_American","Chilean"="South_American", "Cuban"="South_American"))
-usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Bar"="International","Contemporary"="International", "Fine_Dining"="International","Vegetarian"="International", "Bakery"="International","Cafe-Coffee_Shop"="International","Organic-Healthy"="International","Juice"="International","Soup"="International","Bagels"="International", "Bar_Pub_Brewery"="International","Breakfast-Brunch"="International", "Cafeteria"="International","Family"="International","Regional"="International","Eclectic"="International", "Fusion"="International","Tea_House"="International", "Australian"="International","Kosher"="International", "Polynesian"="International"))
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Dutch-Belgian"="European",
+                                               "Continental-European"="European",
+                                               "Eastern_European"="European",
+                                               "Greek"="European",
+                                               "Spanish"="European", "French"="European",
+                                               "German"="European", "Italian"="European",
+                                               "Polish"="European", "Pizzeria"="European",
+                                               "Dessert-Ice_Cream"="European", 
+                                               "Seafood"="European"))
+
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Ethiopian"="African",
+                                               "African"="African"))
+
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Barbecue"="American",
+                                               "Hot_Dogs"="American",
+                                               "Steaks"="American",
+                                               "American"="American",
+                                               "Fast_Food"="American",
+                                               "Burgers"="American",
+                                               "California"="American",
+                                               "Southwestern"="American",
+                                               "Game"="American",
+                                               "Diner"="American"))
+
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Persian"="Persian",
+                                               "Mediterranean"="Persian",
+                                               "Turkish"="Persian",
+                                               "Afghan"="Persian",
+                                               "Armenian"="Persian"))
+
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Brazilian"="South_American",
+                                               "Caribbean"="South_American",
+                                               "Southern"="South_American",
+                                               "Mexican"="South_American",
+                                               "Latin_American"="South_American"))
+
+cuisine$Rcuisine = revalue(cuisine$Rcuisine, c("Bar"="International",
+                                               "Contemporary"="International",
+                                               "Fine_Dining"="International",
+                                               "Vegetarian"="International",
+                                               "Bakery"="International",
+                                               "Cafe-Coffee_Shop"="International",
+                                               "Organic-Healthy"="International",
+                                               "Juice"="International",
+                                               "Soup"="International",
+                                               "Bagels"="International",
+                                               "Bar_Pub_Brewery"="International",
+                                               "Breakfast-Brunch"="International",
+                                               "Cafeteria"="International",
+                                               "Family"="International",
+                                               "Regional"="International"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Japanese"="Asian", "Chinese"="Asian",
+                                                       "Sushi"="Asian", "Korean"="Asian",
+                                                       "Mongolian"="Asian", "Thai"="Asian",
+                                                       "Asia"="Asian", "Vietnamese"="Asian",
+                                                       "Deli-Sandwiches"="Asian",
+                                                       "Southeast_Asian"="Asian",
+                                                       "Burmese"="Asian", "Cambodian"="Asian", 
+                                                       "Malaysian"="Asian", "Dim_Sum"="Asian", "Indonesian"="Asian"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Dutch-Belgian"="European",
+                                                       "Continental-European"="European",
+                                                       "Eastern_European"="European",
+                                                       "Greek"="European",
+                                                       "Spanish"="European", "French"="European",
+                                                       "German"="European", "Italian"="European",
+                                                       "Polish"="European", "Pizzeria"="European",
+                                                       "Dessert-Ice_Cream"="European", 
+                                                       "Seafood"="European",
+                                                       "British"="European",
+                                                       "Irish"="European",
+                                                       "Swiss"="European",
+                                                       "Filipino"="European", "Austrian"="European", "Hungarian"="European",
+                                                       "Portuguese"="European", "Romanian"="European", "Basque"="European",
+                                                       "Scandinavian"="European", "Russian-Ukrainian"="European"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Ethiopian"="African",
+                                                       "African"="African",
+                                                       "North_African"="African",
+                                                       "Israeli"="African",
+                                                       "Jamaican"="African", "Lebanese"="African", "Tibetan"="African", "Tunisian"="African", 
+                                                       "Middle_Eastern"="African", "Moroccan"="African"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Barbecue"="American",
+                                                       "Hot_Dogs"="American",
+                                                       "Steaks"="American",
+                                                       "American"="American",
+                                                       "Fast_Food"="American",
+                                                       "Burgers"="American",
+                                                       "California"="American",
+                                                       "Southwestern"="American",
+                                                       "Game"="American",
+                                                       "Diner"="American",
+                                                       "Doughnuts"="American",
+                                                       "Pacific_Northwest"="American",
+                                                       "Cajun-Creole"="American",
+                                                       "Pacific_Rim"="American",
+                                                       "Canadian"="American",
+                                                       "Hawaiian"="American", "Indigenous"="American"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Persian"="Persian",
+                                                       "Mediterranean"="Persian",
+                                                       "Turkish"="Persian",
+                                                       "Afghan"="Persian",
+                                                       "Armenian"="Persian",
+                                                       "Indian-Pakistani"="Persian"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Brazilian"="South_American",
+                                                       "Caribbean"="South_American",
+                                                       "Southern"="South_American",
+                                                       "Mexican"="South_American",
+                                                       "Latin_American"="South_American", "Peruvian"="South_American",
+                                                       "Tapas"="South_American", "Tex-Mex"="South_American",
+                                                       "Chilean"="South_American", "Cuban"="South_American"))
+
+usercuisine$Rcuisine = revalue(usercuisine$Rcuisine, c("Bar"="International",
+                                                       "Contemporary"="International",
+                                                       "Fine_Dining"="International",
+                                                       "Vegetarian"="International",
+                                                       "Bakery"="International",
+                                                       "Cafe-Coffee_Shop"="International",
+                                                       "Organic-Healthy"="International",
+                                                       "Juice"="International",
+                                                       "Soup"="International",
+                                                       "Bagels"="International",
+                                                       "Bar_Pub_Brewery"="International",
+                                                       "Breakfast-Brunch"="International",
+                                                       "Cafeteria"="International",
+                                                       "Family"="International",
+                                                       "Regional"="International",
+                                                       "Eclectic"="International", "Fusion"="International",
+                                                       "Tea_House"="International", 
+                                                       "Australian"="International",
+                                                       "Kosher"="International", "Polynesian"="International"))
 
 #Dashboard header carrying the title of the dashboard
 header <- dashboardHeader(title = "Customer-Rating Dashboard")  
@@ -163,7 +289,7 @@ body <- dashboardBody(
                         status = "success",
                         selectInput("select_dia_restaurant", "Diagramm Möglichkeiten", c("Verteilung-Cuisines", "Parking-Optionen", "Preisklassen"), selected = "Verteilung-Cuisines", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
-                        selectInput("select_cuisine_restaurant", "Cuisine (Außer bei Verteilung-Cuisines)", c("Alle", "Persian","American", "Asian","International", "South_American European", "European", "African"), selected = "Alle", multiple = FALSE,
+                        selectInput("select_cuisine_restaurant", "Cuisine (Außer bei Verteilung-Cuisines)", c("Alle", "Persian","American", "Asian","International", "South_American", "European", "African"), selected = "Alle", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL)
                     ),
                 ),
@@ -199,7 +325,7 @@ body <- dashboardBody(
                         status = "success",
                         selectInput("select_dia_user", "Diagramm Möglichkeiten", c("Budget-Trinkverhalten", "Altersverteilung"), selected = "Budget-Trinkverhalten", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
-                        selectInput("select_cuisine_user", "Cuisine", c("Alle", "Persian","American", "Asian","International", "South_American European", "European", "African"), selected = "Alle", multiple = FALSE,
+                        selectInput("select_cuisine_user", "Cuisine", c("Alle", "Persian","American", "Asian","International", "South_American", "European", "African"), selected = "Alle", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL)
                     ),
                 ),
@@ -219,7 +345,6 @@ body <- dashboardBody(
                 fluidRow(
                     valueBoxOutput("datasets_rating"),
                     valueBoxOutput("count_ratings"),
-                    valueBoxOutput("count_tmp"),
                 ),
                 fluidRow(
                     box(
@@ -232,7 +357,7 @@ body <- dashboardBody(
                         status = "success",
                         selectInput("select_dia_rating", "Diagramm Möglichkeiten", c("Rating-Alter-Cuisine", "Rating-Preisklasse", "Rating-Cuisine"), selected = "Rating-Alter-Cuisine", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
-                        selectInput("select_cuisine_rating", "Cuisine", c("Alle", "Persian","American", "Asian","International", "South_American European", "European", "African"), selected = "Alle", multiple = FALSE,
+                        selectInput("select_cuisine_rating", "Cuisine", c("Alle", "Persian","American", "Asian","International", "South_American", "European", "African"), selected = "Alle", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL)
                     ),
                 ),
@@ -380,14 +505,22 @@ server <- function(input, output) {
         arrange(placeID) %>% 
         select(placeID, rating, food_rating, service_rating, name, Rcuisine)
     
-    rating_detailed %>% 
-        group_by(placeID, name, Rcuisine) %>% 
+    rating_detailed_grouped <- rating_detailed %>% 
+        group_by(Rcuisine) %>% 
         summarize(rating = mean(rating),
                   food_rating = mean(food_rating),
                   service_rating = mean(food_rating))
     
     detailed_price <- geoplaces %>% 
         join(cuisine)
+    
+    rating_detailed_user <- rating %>% 
+        join(userprofile) %>% 
+        join(usercuisine)
+    
+    rating_detailed_price <- rating %>% 
+        join(cuisine) %>% 
+        join(geoplaces)
     
     # Dashboard Tab
     output$datasets <- renderValueBox({
@@ -473,7 +606,7 @@ server <- function(input, output) {
     
     output$count_cuisines <- renderValueBox({
         valueBox(
-            formatC(8, format="d", big.mark=','),
+            formatC(7, format="d", big.mark=','),
             paste('Küchen Ausprägungen'),
             # paste('Datensätze (User):',rating$rating),
             icon = icon("cutlery",lib='glyphicon'),
@@ -535,13 +668,13 @@ server <- function(input, output) {
         valueBox(
             formatC(nrow(count_users_val), format="d", big.mark=','),
             paste('Kunden: ', input$select_cuisine_user),
-            icon = icon("home",lib='glyphicon'),
+            icon = icon("user",lib='glyphicon'),
             color = "green")
     })
     
     output$count_cuisines_user <- renderValueBox({
         valueBox(
-            formatC(8, format="d", big.mark=','),
+            formatC(7, format="d", big.mark=','),
             paste('Küchen Ausprägungen'),
             # paste('Datensätze (User):',rating$rating),
             icon = icon("cutlery",lib='glyphicon'),
@@ -576,11 +709,43 @@ server <- function(input, output) {
     })
     
     # Rating Daten Tab
+    output$datasets_rating <- renderValueBox({
+        valueBox(
+            formatC("5", format="d", big.mark=','),
+            paste('Datasets'),
+            icon = icon("list-alt",lib='glyphicon'),
+            color = "purple")
+    })
     
+    output$count_ratings <- renderValueBox({
+        if(input$select_cuisine_rating != "Alle"){
+            count_rating_val <- rating %>% 
+                join(cuisine) %>% 
+                filter(Rcuisine == input$select_cuisine_rating)
+        }else{
+            count_rating_val <- rating
+        }
+        valueBox(
+            formatC(nrow(count_rating_val), format="d", big.mark=','),
+            paste('Ratings: ', input$select_cuisine_user),
+            icon = icon("equalizer",lib='glyphicon'),
+            color = "green")
+    })
+
     output$rating_detail_data <- renderPlot({
-        if (input$select_dia_rating == "Rating-Alter-Cuisine")  {print(
-            ggplot(cuisine, aes(x = Rcuisine, fill=Rcuisine)) + geom_bar()
-        )}   
+        if (input$select_dia_rating == "Rating-Alter-Cuisine")  {
+            if(req(input$select_cuisine_rating) != "Alle") {
+                rating_detailed_price_filtered <- rating_detailed_price %>%
+                    filter(Rcuisine == input$select_cuisine_rating)
+                
+                print(
+                    ggplot(rating_detailed_price_filtered, aes(rating, colour = as.factor(birth_year))) + geom_density()
+                )
+            }
+            if(req(input$select_cuisine_rating) == "Alle") {print(
+                ggplot(rating_detailed_user, aes(rating, colour = as.factor(birth_year))) + geom_density() + facet_wrap(.~Rcuisine)
+            )}
+        }   
         if (input$select_dia_rating == "Rating-Preisklasse")  {
             if(req(input$select_cuisine_rating) != "Alle") {
                 parking_filtered <- parking %>% 
@@ -593,21 +758,11 @@ server <- function(input, output) {
                 )
             }
             if(req(input$select_cuisine_rating) == "Alle") {print(
-                print(ggplot(parking, aes(x = parking_lot, fill=parking_lot)) + geom_bar())
+                ggplot(rating_detailed_price, aes(rating, colour = price)) + geom_density() + facet_wrap(.~Rcuisine)
             )}
         }  
         if (input$select_dia_rating == "Rating-Cuisine")  {
-            if(req(input$select_cuisine_rating) != "Alle") {
-                detailed_price_filtered <- detailed_price %>% 
-                    filter(Rcuisine == input$select_cuisine_rating)
-                
-                print(
-                    ggplot(detailed_price_filtered, aes(x = price, fill=price)) + geom_bar()
-                )
-            }
-            if(req(input$select_cuisine_rating) == "Alle") {print(
-                ggplot(detailed_price, aes(x = price, fill=price)) + geom_bar() + facet_wrap(.~Rcuisine)
-            )}
+            ggplot(rating_detailed_grouped, aes(Rcuisine, fill=rating)) + geom_bar()
         }  
     })
     
