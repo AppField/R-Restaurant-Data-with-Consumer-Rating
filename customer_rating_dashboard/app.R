@@ -130,7 +130,7 @@ body <- dashboardBody(
                                In dem Tab 'Rating' befindet sich eine Veranschaulichung der Beziehung von Food-Rating und Service-Rating in anbetracht der verschiedenen Küchen."),
                            tabBox(
                                title = "Daten",
-                               id = "tab_overview_data", height = "300px",
+                               id = "tab_overview_data", height = "500px",
                                tabPanel("Geo Locations", leafletOutput("shared_location_leaflet"),),
                                tabPanel("Restaurant", plotOutput("restaurant_ballon")),
                                tabPanel("Kunden", plotOutput("kunden_drinking_budget")),
@@ -156,7 +156,7 @@ body <- dashboardBody(
                         " - Payment Acceptance", br(),
                         " - Parking Possibilities", br(),
                         " - Cuisine Variations", br(),
-                        " - Working Hours´"
+                        " - Working Hours"
                     ),
                     box(
                         title = "Filter Optionen", 
@@ -173,7 +173,7 @@ body <- dashboardBody(
                                status = "primary", 
                                solidHeader = FALSE,
                                width = 2.4,
-                               renderPlot("restaurant_detail_data")
+                               plotOutput("restaurant_detail_data")
                         )
                     ),
                 ),
@@ -354,8 +354,13 @@ server <- function(input, output) {
     })
     
     output$restaurant_detail_data <- renderPlot({
-        ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +  
+        p1 <- ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +  
             geom_smooth(method = "lm", se=F) + ggtitle("", input$select_cuisine)
+        
+        if (input$select_dia == "Verteilung-Cuisines")  {print(p1)}   
+        if (input$select_dia == "plot 2")  {print(p1)}  
+        if (input$select_dia == "plot 3")  {print(p1)}  
+        if (input$select_dia == "plot 4")  {print(p1)}
     })
     
     # Prediction Rating
