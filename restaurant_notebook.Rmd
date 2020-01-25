@@ -668,7 +668,7 @@ tuneobj_nnet = tune.nnet(rating ~ ., data = train_rating_scaled_na_free, linout 
 summary(tuneobj_nnet)
 plot(tuneobj_nnet)
 ```
-Für das NNET-MOdell werden size = 10 und decay = 0.2 ausgewählt.
+Für das NNET-Modell werden size = 10 und decay = 0.2 ausgewählt.
 
 #### Tunen für Cuisine - Prediction
 

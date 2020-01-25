@@ -427,7 +427,7 @@ body <- dashboardBody(
                         title = "Methoden Vergleich (Train)",
                         status = "primary",
                         collapsible = TRUE, 
-                        dataTableOutput("pred_rating_table_methods_train")
+                        tableOutput("pred_rating_table_methods_train")
                     ),
                     box(
                         title = "Predicting Cuisine",
@@ -441,7 +441,7 @@ body <- dashboardBody(
                         title = "Methoden Vergleich (Test)",
                         status = "primary",
                         collapsible = TRUE, 
-                        dataTableOutput("pred_rating_table_methods_test")
+                        tableOutput("pred_rating_table_methods_test")
                     ),
                     box(
                         title = "Predicting Cuisine",
@@ -476,7 +476,7 @@ body <- dashboardBody(
                         title = "Methoden Vergleich (Train)",
                         status = "primary",
                         collapsible = TRUE, 
-                        dataTableOutput("pred_cuisine_table_methods_train")
+                        tableOutput("pred_cuisine_table_methods_train")
                     ),
                     box(
                         title = "Predicting Cuisine (Train)",
@@ -490,7 +490,7 @@ body <- dashboardBody(
                         title = "Methoden Vergleich (Test)",
                         status = "primary",
                         collapsible = TRUE, 
-                        dataTableOutput("pred_cuisine_table_methods_test")
+                        tableOutput("pred_cuisine_table_methods_test")
                     ),
                     box(
                         title = "Predicting Cuisine",
@@ -553,6 +553,16 @@ server <- function(input, output) {
     rating_detailed_price <- rating %>% 
         join(cuisine) %>% 
         join(geoplaces)
+    
+    pred_rating_table_train <- data_frame(
+        "Methode" = c("RPART", "RandomForest", "KNN", "NNET", "Naive Bayes"),
+        "Train Error" = c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923) 
+    )
+    
+    pred_cuisine_table_train <- data_frame(
+        "Methode" = c("RPART", "RandomForest","NNET", "Naive Bayes"), 
+        "Train Error" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909) 
+    )
     
     # Dashboard Tab
     output$datasets <- renderValueBox({
@@ -822,6 +832,10 @@ server <- function(input, output) {
             icon = icon("stats",lib='glyphicon'),
             color = "yellow")
     })
+    
+    output$pred_rating_table_methods_train <- renderTable({
+        pred_rating_table_train
+    })
 
     # Predicting Cuisine
     output$methods_cuisine <- renderValueBox({
@@ -847,6 +861,10 @@ server <- function(input, output) {
             # paste('Datensätze (User):',rating$rating),
             icon = icon("stats",lib='glyphicon'),
             color = "yellow")
+    })
+    
+    output$pred_cuisine_table_methods_train <- renderTable({
+        pred_cuisine_table_train
     })
 }
 
