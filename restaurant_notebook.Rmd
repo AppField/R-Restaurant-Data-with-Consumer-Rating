@@ -516,7 +516,6 @@ rating_detailed_price
 ggplot(rating_detailed_price, aes(rating, colour = price)) + geom_density() + facet_wrap(.~Rcuisine)
 ```
 
-
 ## Modellierung (Klassifikation oder Regression) mit zumindest 3 Methoden, inkl. Parameter Tuning und Benchmarking [30%]
 
 Für die Modelle wird das Rating vorhergesagt aufgrund der Prädiktoren Cuisine, smoker, budget, drinking_level, birth_year.
@@ -974,7 +973,15 @@ colnames(comp_all_acc) <- c("Model", "Accuracy Overall")
 plot(comp_all_acc)
 ```
 
+### Conclusion
+
+Für die Vorhersage des Ratings ist das Random Forest Model zu verwenden.
+
+Für das zweite Vorhersagemodell (Cuisine) ist das Naive Bayes Model zu wählen.
+
 ## Deployment des besten Modells mittels Web Service [10%]
+
+Über beide Vorhersage Modelle hinweg, ist das genaueste Model: Random Forest für die Rating Vorgersage. Dieses wird somit auch deployed.
 
 siehe:
  * model.R
