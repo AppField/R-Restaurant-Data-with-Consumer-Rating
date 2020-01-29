@@ -358,7 +358,7 @@ cuisine_detail <- cuisine_detail %>%
   filter(!is.na(name)) %>%
   select(placeID, name, Rcuisine, alcohol, smoking_area, dress_code, accessibility, price, Rambience)
 
-cuisine_detail 
+head(cuisine_detail) 
 ```
 
 Überblick über einzelne Ausprägungen in den Bereichen Alcohol, Smoking und Price
@@ -375,7 +375,7 @@ cuisine_detail_dist_alc <- gather(cuisine_detail_dist_alc, key, value, -Rcuisine
   group_by(Rcuisine) %>% 
   rename(Alc_Full_Bar = Full_Bar, Alc_No_Alcohol_Served = No_Alcohol_Served, Alc_Wine_Beer = "Wine-Beer")
 
-cuisine_detail_dist_alc
+head(cuisine_detail_dist_alc)
 
 ## Smoking
 cuisine_detail_dist_smoking<- cuisine_detail %>% 
@@ -387,7 +387,7 @@ cuisine_detail_dist_smoking <- gather(cuisine_detail_dist_smoking, key, value, -
   group_by(Rcuisine) %>% 
   rename(smoking_not_permitted = "not permitted", smoking_only_at_bar = "only at bar", smoking_none = none, smoking_section = section, smoking_permitted = permitted)
 
-cuisine_detail_dist_smoking
+head(cuisine_detail_dist_smoking)
 
 ## Price
 cuisine_detail_dist_price<- cuisine_detail %>% 
@@ -399,7 +399,7 @@ cuisine_detail_dist_price <- gather(cuisine_detail_dist_price, key, value, -Rcui
   group_by(Rcuisine) %>% 
   rename(price_low = low, price_medium = medium, price_high = high) 
 
-cuisine_detail_dist_price
+head(cuisine_detail_dist_price)
 
 # JOINING TABLES
 
@@ -408,7 +408,7 @@ dt_dist$Rcuisine1 <- NULL
 dt_dist$Rcuisine2 <- NULL
 dt <- column_to_rownames(dt_dist, 'Rcuisine')
 dt <- as.table(as.matrix(dt))
-dt
+head(dt)
 
 balloonplot(t(dt), main ="Distribution Smoking, Alcohol, Pricing Grouped By the Cuisines", xlab ="", ylab="",
             label = FALSE, show.margins = FALSE, colsrt=90, rowmar=5, colmar=10)
@@ -420,7 +420,7 @@ Verteilung der Preisklassen in den jeweiligen Cuisines
 detailed_price <- geoplaces %>% 
   join(cuisine)
 
-detailed_price
+head(detailed_price)
 
 ggplot(detailed_price, aes(x = price, fill=price)) + geom_bar()
 ggplot(detailed_price, aes(x = price, fill=price)) + geom_bar() + facet_wrap(.~Rcuisine)
@@ -435,7 +435,7 @@ user_detail <- userprofile %>%
   join(usercuisine) %>% 
   join(userpayment)
 
-user_detail
+head(user_detail)
 ```
 
 Standort der Kunden und der Restaurants
@@ -457,7 +457,7 @@ ggplot(user_detail) + geom_mosaic(aes(product(drink_level,budget), fill = drink_
 ```
 
 ```{r}
-user_detail
+head(user_detail)
 ggplot(user_detail) + geom_mosaic(aes(product(drink_level,budget), fill = drink_level)) + facet_wrap(.~Rcuisine, ncol=2)
 ```
 
@@ -499,7 +499,7 @@ rating_detailed_user <- rating %>%
   join(userprofile) %>% 
   join(usercuisine)
 
-rating_detailed_user
+head(rating_detailed_user)
 
 ggplot(rating_detailed_user, aes(rating, colour = as.factor(birth_year))) + geom_density() + facet_wrap(.~Rcuisine)
 ```
@@ -511,7 +511,7 @@ rating_detailed_price <- rating %>%
   join(cuisine) %>% 
   join(geoplaces)
 
-rating_detailed_price
+head(rating_detailed_price)
 
 ggplot(rating_detailed_price, aes(rating, colour = price)) + geom_density() + facet_wrap(.~Rcuisine)
 ```
@@ -544,8 +544,8 @@ data_cuisine <- userprofile %>%
   join(usercuisine) %>% 
   select(smoker, drink_level, budget, personality, Rcuisine)
 
-data_rating
-data_cuisine
+head(data_rating)
+head(data_cuisine)
 ```
 
 Splitting
