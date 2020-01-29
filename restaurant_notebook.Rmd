@@ -975,7 +975,7 @@ plot(comp_all_acc)
 
 ### Conclusion
 
-Für die Vorhersage des Ratings ist das Random Forest Model zu verwenden.
+Für die Vorhersage des Ratings ist das Random Forest Model zu verwenden. 
 
 Für das zweite Vorhersagemodell (Cuisine) ist das Naive Bayes Model zu wählen.
 

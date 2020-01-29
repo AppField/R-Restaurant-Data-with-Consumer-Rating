@@ -554,12 +554,16 @@ server <- function(input, output) {
         join(cuisine) %>% 
         join(geoplaces)
     
+    colnames <- c("RPART", "RandomForest", "KNN", "NNET", "Naive Bayes")
     pred_rating_table_train <- data_frame(
         "Methode" = c("RPART", "RandomForest", "KNN", "NNET", "Naive Bayes"),
         "Train Error" = c(0.60, 0.31, 0.60, 0.41, 0.59),
     )
     
-    colnames(pred_rating_table_train) <- c("Model", "Train_Error")
+    pred_rating_table_train_overall_acc <- c(0.60, 0.31, 0.60, 0.41, 0.59)
+    
+    pred_rating_table_train = data.frame(colnames, pred_rating_table_train_overall_acc)
+    colnames(pred_rating_table_train) <- c("Model", "Train Error")
     
     pred_rating_table_test <- data_frame(
         "Methode" = c("RPART", "RandomForest", "KNN", "NNET", "Naive Bayes"),
@@ -567,20 +571,22 @@ server <- function(input, output) {
         "Accuracy" =  c(0.47, 0.50, 0.50, 0.47, 0.47),
     )
     
+    pred_rating_table_test_overall_acc <- c(0.58, 0.50, 0.50, 0.58, 0.57)
     
-    plot_pred_rating_table_test <- data_frame(
-        "Methode" = c("RPART", "RandomForest", "KNN", "NNET", "Naive Bayes"),
-        "Generalization_Error" = c(0.58, 0.50, 0.50, 0.58, 0.57),
-    )
+    plot_pred_rating_table_test = data.frame(colnames, pred_rating_table_test_overall_acc)
+    colnames(plot_pred_rating_table_test) <- c("Model", "Accuracy")
     
-    colnames(plot_pred_rating_table_test) <- c("Model", "Generalization_Error")
+    colnames_cuisine <- c("RPART", "RandomForest","NNET", "Naive Bayes")
     
     pred_cuisine_table_train <- data_frame(
         "Methode" = c("RPART", "RandomForest","NNET", "Naive Bayes"), 
         "Train Error" = c(0.74, 0.75, 0.74, 0.69),
     )
     
-    colnames(pred_cuisine_table_train) <- c("Model", "Train_Error")
+    pred_cuisine_table_train_overall_acc <- c(0.74, 0.75, 0.74, 0.69)
+    
+    pred_cuisine_table_train = data.frame(colnames_cuisine, pred_cuisine_table_train_overall_acc)
+    colnames(pred_cuisine_table_train) <- c("Model", "Train Error")
     
     pred_cuisine_table_test <- data_frame(
         "Methode" = c("RPART", "RandomForest","NNET", "Naive Bayes"), 
@@ -588,12 +594,9 @@ server <- function(input, output) {
         "Accuracy" = c(0.35, 0.35, 0.35, 0.37), 
     )
     
-    plot_pred_cuisine_table_test <- data_frame(
-        "Methode" = c("RPART", "RandomForest","NNET", "Naive Bayes"), 
-        "Generalization_Error" = c(0.71, 0.65, 0.65, 0.66),
-    )
-    
-    colnames(plot_pred_cuisine_table_test) <- c("Model", "Generalization_Error")
+    pred_cuisine_table_test_overall_acc <- c(0.35, 0.35, 0.35, 0.37)
+    plot_pred_cuisine_table_test = data.frame(colnames_cuisine, pred_cuisine_table_test_overall_acc)
+    colnames(plot_pred_cuisine_table_test) <- c("Model", "Accuracy")
     
     # Dashboard Tab
     output$datasets <- renderValueBox({
@@ -885,6 +888,10 @@ server <- function(input, output) {
     output$acc_pred_train_rating <- renderPlot({
         plot(pred_rating_table_train)
     })
+    
+    output$acc_pred_test_rating <- renderPlot({
+        plot(plot_pred_rating_table_test)
+    })
 
     # Predicting Cuisine
     output$methods_cuisine <- renderValueBox({
@@ -918,6 +925,14 @@ server <- function(input, output) {
     
     output$pred_cuisine_table_methods_test <- renderTable({
         pred_cuisine_table_test
+    })
+    
+    output$acc_pred_train_cuisine <- renderPlot({
+        plot(pred_cuisine_table_train)
+    })
+    
+    output$acc_pred_test_cuisine <- renderPlot({
+        plot(plot_pred_cuisine_table_test)
     })
 }
 
