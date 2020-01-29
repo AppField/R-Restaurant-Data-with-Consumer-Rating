@@ -433,7 +433,7 @@ body <- dashboardBody(
                         title = "Predicting Cuisine",
                         status = "primary", 
                         collapsible = TRUE,
-                        "sad"
+                        plotOutput("acc_pred_train_rating")
                     ) 
                 ),
                 fluidRow(
@@ -447,7 +447,7 @@ body <- dashboardBody(
                         title = "Predicting Cuisine",
                         status = "primary", 
                         collapsible = TRUE,
-                        "sad"
+                        plotOutput("acc_pred_test_rating")
                     ) 
                 ),
         ),
@@ -482,7 +482,7 @@ body <- dashboardBody(
                         title = "Predicting Cuisine (Train)",
                         status = "primary", 
                         collapsible = TRUE,
-                        "sad"
+                        plotOutput("acc_pred_train_cuisine")
                     ) 
                 ),
                 fluidRow(
@@ -496,7 +496,7 @@ body <- dashboardBody(
                         title = "Predicting Cuisine",
                         status = "primary", 
                         collapsible = TRUE,
-                        "sad"
+                        plotOutput("acc_pred_test_cuisine")
                     ) 
                 ),
         )
@@ -556,12 +556,38 @@ server <- function(input, output) {
     
     pred_rating_table_train <- data_frame(
         "Methode" = c("RPART", "RandomForest", "KNN", "NNET", "Naive Bayes"),
-        "Train Error" = c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923) 
+        "Train Error" = c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
+        "Accuracy" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
+        "Precision" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923), 
+        "Specificity" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
+        "F-Value" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923), 
+    )
+    
+    pred_rating_table_test <- data_frame(
+        "Methode" = c("RPART", "RandomForest", "KNN", "NNET", "Naive Bayes"),
+        "Train Error" = c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
+        "Accuracy" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
+        "Precision" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923), 
+        "Specificity" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
+        "F-Value" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923), 
     )
     
     pred_cuisine_table_train <- data_frame(
         "Methode" = c("RPART", "RandomForest","NNET", "Naive Bayes"), 
-        "Train Error" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909) 
+        "Train Error" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
+        "Accuracy" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
+        "Precision" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
+        "Specificity" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
+        "F-Value" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
+    )
+    
+    pred_cuisine_table_test <- data_frame(
+        "Methode" = c("RPART", "RandomForest","NNET", "Naive Bayes"), 
+        "Train Error" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
+        "Accuracy" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
+        "Precision" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
+        "Specificity" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
+        "F-Value" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
     )
     
     # Dashboard Tab
@@ -820,7 +846,7 @@ server <- function(input, output) {
     output$best_acc_rating <- renderValueBox({
         valueBox(
             formatC("52%"),
-            paste('Overall Accuracy'),
+            paste('Overall Accuracy (Train)'),
             icon = icon("stats",lib='glyphicon'),
             color = "green")
     })
@@ -828,13 +854,17 @@ server <- function(input, output) {
     output$selected_method_rating <- renderValueBox({
         valueBox(
             formatC("50%", format="d", big.mark=','),
-            paste('Overall Accuracy Test'),
+            paste('Overall Accuracy (Test)'),
             icon = icon("stats",lib='glyphicon'),
             color = "yellow")
     })
     
     output$pred_rating_table_methods_train <- renderTable({
         pred_rating_table_train
+    })
+    
+    output$pred_rating_table_methods_test <- renderTable({
+        pred_rating_table_test
     })
 
     # Predicting Cuisine
@@ -849,7 +879,7 @@ server <- function(input, output) {
     output$best_acc_cuisine <- renderValueBox({
         valueBox(
             formatC("50%", format="d", big.mark=','),
-            paste('Overall Accuracy Training'),
+            paste('Overall Accuracy (Train)'),
             icon = icon("stats",lib='glyphicon'),
             color = "green")
     })
@@ -857,7 +887,7 @@ server <- function(input, output) {
     output$selected_method_cuisine <- renderValueBox({
         valueBox(
             formatC("50%", format="d", big.mark=','),
-            paste('Overall Accuracy Test'),
+            paste('Overall Accuracy (Test)'),
             # paste('Datensätze (User):',rating$rating),
             icon = icon("stats",lib='glyphicon'),
             color = "yellow")
@@ -865,6 +895,10 @@ server <- function(input, output) {
     
     output$pred_cuisine_table_methods_train <- renderTable({
         pred_cuisine_table_train
+    })
+    
+    output$pred_cuisine_table_methods_test <- renderTable({
+        pred_cuisine_table_test
     })
 }
 
