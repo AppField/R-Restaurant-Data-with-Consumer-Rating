@@ -430,7 +430,7 @@ body <- dashboardBody(
                         tableOutput("pred_rating_table_methods_train")
                     ),
                     box(
-                        title = "Predicting Cuisine",
+                        title = "Predicting Rating",
                         status = "primary", 
                         collapsible = TRUE,
                         plotOutput("acc_pred_train_rating")
@@ -444,7 +444,7 @@ body <- dashboardBody(
                         tableOutput("pred_rating_table_methods_test")
                     ),
                     box(
-                        title = "Predicting Cuisine",
+                        title = "Predicting Rating",
                         status = "primary", 
                         collapsible = TRUE,
                         plotOutput("acc_pred_test_rating")
@@ -556,39 +556,44 @@ server <- function(input, output) {
     
     pred_rating_table_train <- data_frame(
         "Methode" = c("RPART", "RandomForest", "KNN", "NNET", "Naive Bayes"),
-        "Train Error" = c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
-        "Accuracy" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
-        "Precision" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923), 
-        "Specificity" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
-        "F-Value" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923), 
+        "Train Error" = c(0.60, 0.31, 0.60, 0.41, 0.59),
     )
+    
+    colnames(pred_rating_table_train) <- c("Model", "Train_Error")
     
     pred_rating_table_test <- data_frame(
         "Methode" = c("RPART", "RandomForest", "KNN", "NNET", "Naive Bayes"),
-        "Train Error" = c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
-        "Accuracy" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
-        "Precision" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923), 
-        "Specificity" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923),
-        "F-Value" =  c(0.6031567, 0.3079268, 0.6021341, 0.4085366, 0.5963923), 
+        "Generalization Error" = c(0.58, 0.50, 0.50, 0.58, 0.57),
+        "Accuracy" =  c(0.47, 0.50, 0.50, 0.47, 0.47),
     )
+    
+    
+    plot_pred_rating_table_test <- data_frame(
+        "Methode" = c("RPART", "RandomForest", "KNN", "NNET", "Naive Bayes"),
+        "Generalization_Error" = c(0.58, 0.50, 0.50, 0.58, 0.57),
+    )
+    
+    colnames(plot_pred_rating_table_test) <- c("Model", "Generalization_Error")
     
     pred_cuisine_table_train <- data_frame(
         "Methode" = c("RPART", "RandomForest","NNET", "Naive Bayes"), 
-        "Train Error" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
-        "Accuracy" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
-        "Precision" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
-        "Specificity" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
-        "F-Value" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
+        "Train Error" = c(0.74, 0.75, 0.74, 0.69),
     )
+    
+    colnames(pred_cuisine_table_train) <- c("Model", "Train_Error")
     
     pred_cuisine_table_test <- data_frame(
         "Methode" = c("RPART", "RandomForest","NNET", "Naive Bayes"), 
-        "Train Error" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
-        "Accuracy" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
-        "Precision" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
-        "Specificity" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
-        "F-Value" = c(0.7181818, 0.5504587, 0.5917431, 0.7090909), 
+        "Generalization Error" = c(0.71, 0.65, 0.65, 0.66), 
+        "Accuracy" = c(0.35, 0.35, 0.35, 0.37), 
     )
+    
+    plot_pred_cuisine_table_test <- data_frame(
+        "Methode" = c("RPART", "RandomForest","NNET", "Naive Bayes"), 
+        "Generalization_Error" = c(0.71, 0.65, 0.65, 0.66),
+    )
+    
+    colnames(plot_pred_cuisine_table_test) <- c("Model", "Generalization_Error")
     
     # Dashboard Tab
     output$datasets <- renderValueBox({
@@ -834,6 +839,16 @@ server <- function(input, output) {
         }  
     })
     
+    # Prediction Overview
+    
+    output$overview_acc_pred_rating <- renderPlot({
+        plot(plot_pred_rating_table_test)
+    })
+    
+    output$overview_acc_pred_cuisine <- renderPlot({
+        plot(plot_pred_cuisine_table_test)
+    })
+    
     # Prediction Rating
     output$methods_rating <- renderValueBox({
         valueBox(
@@ -865,6 +880,10 @@ server <- function(input, output) {
     
     output$pred_rating_table_methods_test <- renderTable({
         pred_rating_table_test
+    })
+    
+    output$acc_pred_train_rating <- renderPlot({
+        plot(pred_rating_table_train)
     })
 
     # Predicting Cuisine
