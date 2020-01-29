@@ -227,18 +227,24 @@ body <- dashboardBody(
                     )
                 ),
                 fluidRow(
-                    box(
-                        title = "Service Rating ~ Food Rating",
-                        status = "primary",
-                        collapsible = TRUE, 
-                        plotOutput("rating_lm", height = "300px")
+                    tabBox(
+                        title = "Daten",
+                        id = "tab_overview_data", height = "300px",
+                        tabPanel("Service Rating ~ Food Rating", plotOutput("rating_lm")),
+                        tabPanel("Anzahl der Restaurants je Küche", plotOutput("count_cuisine")),
+                        width = 6,
+                        side = "right",
+                        selected = "Anzahl der Restaurants je Küche"
                     ),
-                    box(
-                        title = "Anzahl der Restaurants je Küche",
-                        status = "primary", 
-                        collapsible = TRUE, 
-                        plotOutput("count_cuisine", height = "300px")
-                    ) 
+                    tabBox(
+                        title = "Prediction Modele",
+                        id = "tab_overview_data", height = "300px",
+                        tabPanel("Accuracy Cuisine", plotOutput("overview_pred_cuisine")),
+                        tabPanel("Accuracy Rating", plotOutput("overview_pred_rating")),
+                        width = 6,
+                        side = "right",
+                        selected = "Accuracy Rating"
+                    ),
                 ),
         ),
         tabItem(tabName = "data_overview",
@@ -631,6 +637,14 @@ server <- function(input, output) {
     
     output$count_cuisine <- renderPlot({
         ggplot(usercuisine, aes(x = Rcuisine, fill=Rcuisine)) + geom_bar()
+    })
+    
+    output$overview_pred_rating <- renderPlot({
+        plot(plot_pred_rating_table_test)
+    })
+    
+    output$overview_pred_cuisine <- renderPlot({
+        plot(plot_pred_cuisine_table_test)
     })
     
     # Daten Overview Tab
