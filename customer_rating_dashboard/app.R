@@ -817,7 +817,7 @@ server <- function(input, output) {
         }
         valueBox(
             formatC(nrow(count_rating_val), format="d", big.mark=','),
-            paste('Ratings: ', input$select_cuisine_user),
+            paste('Ratings: ', input$select_cuisine_rating),
             icon = icon("equalizer",lib='glyphicon'),
             color = "green")
     })
@@ -825,7 +825,7 @@ server <- function(input, output) {
     output$rating_detail_data <- renderPlot({
         if (input$select_dia_rating == "Rating-Alter-Cuisine")  {
             if(req(input$select_cuisine_rating) != "Alle") {
-                rating_detailed_price_filtered <- rating_detailed_price %>%
+                rating_detailed_price_filtered <- rating_detailed_user %>%
                     filter(Rcuisine == input$select_cuisine_rating)
                 
                 print(
@@ -844,7 +844,7 @@ server <- function(input, output) {
                     filter(Rcuisine == input$select_cuisine_rating)
                 
                 print(
-                    print(ggplot(parking_filtered, aes(x = parking_lot, fill=parking_lot)) + geom_bar())
+                    ggplot(rating_detailed_price, aes(rating, colour = price)) + geom_density()
                 )
             }
             if(req(input$select_cuisine_rating) == "Alle") {print(
