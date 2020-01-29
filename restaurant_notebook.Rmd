@@ -414,14 +414,6 @@ balloonplot(t(dt), main ="Distribution Smoking, Alcohol, Pricing Grouped By the 
             label = FALSE, show.margins = FALSE, colsrt=90, rowmar=5, colmar=10)
 ```
 
-Chi-Squared Tests um Zusammenhänge der Variablen zu erkennen.
-Dafür wird zunächst eine Distribution Table erzeugt mit den Variablen: alcohol, smoking_area, price gruppiert nach Rcuisine.
-#!!! NOCH NICHT DAS RICHTIGE
-```{r}
-chisq <- chisq.test(dt)
-corrplot(chisq$residuals, is.cor = FALSE)
-```
-
 Verteilung der Preisklassen in den jeweiligen Cuisines
 
 ```{r}
