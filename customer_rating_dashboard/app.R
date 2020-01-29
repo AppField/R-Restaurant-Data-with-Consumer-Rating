@@ -860,8 +860,8 @@ server <- function(input, output) {
     
     output$best_acc_rating <- renderValueBox({
         valueBox(
-            formatC("52%"),
-            paste('Overall Accuracy (Train)'),
+            formatC("31%"),
+            paste('Train Error - RF'),
             icon = icon("stats",lib='glyphicon'),
             color = "green")
     })
@@ -869,7 +869,7 @@ server <- function(input, output) {
     output$selected_method_rating <- renderValueBox({
         valueBox(
             formatC("50%", format="d", big.mark=','),
-            paste('Overall Accuracy (Test)'),
+            paste('Accuracy (Test) - RF'),
             icon = icon("stats",lib='glyphicon'),
             color = "yellow")
     })
@@ -898,15 +898,15 @@ server <- function(input, output) {
     output$best_acc_cuisine <- renderValueBox({
         valueBox(
             formatC("50%", format="d", big.mark=','),
-            paste('Overall Accuracy (Train)'),
+            paste('Train Error - Bayes'),
             icon = icon("stats",lib='glyphicon'),
             color = "green")
     })
     
     output$selected_method_cuisine <- renderValueBox({
         valueBox(
-            formatC("50%", format="d", big.mark=','),
-            paste('Overall Accuracy (Test)'),
+            formatC("37%", format="d", big.mark=','),
+            paste('Accuracy (Test) - Bayes'),
             # paste('Datensätze (User):',rating$rating),
             icon = icon("stats",lib='glyphicon'),
             color = "yellow")
