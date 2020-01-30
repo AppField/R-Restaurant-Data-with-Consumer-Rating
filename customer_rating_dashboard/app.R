@@ -514,7 +514,7 @@ server <- function(input, output) {
                      price_high = c(0,1,1,1,1,1),
                      price_low = c(1,1,0,1,1,1),
                      price_medium = c(0,1,1,1,1,1))
-    dt <- column_to_rownames(dt_dist, 'Rcuisine')
+    dt <- column_to_rownames(dt, 'Rcuisine')
     balloonplot_data_restaurant <- as.table(as.matrix(dt))
     
     user_detail <- userprofile %>% 
