@@ -180,7 +180,6 @@ sidebar <- dashboardSidebar(
     sidebarMenu(
         menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
         menuItem( "Daten", tabName = "data", icon = icon("list-alt",lib='glyphicon'),
-                  menuSubItem("Overview", tabName = "data_overview", icon = icon("blackboard",lib='glyphicon')),
                   menuSubItem("Restaurant", tabName = "restaurant", icon = icon("cutlery",lib='glyphicon')),
                   menuSubItem("User", tabName = "user", icon = icon("user",lib='glyphicon')),
                   menuSubItem("Rating", tabName = "rating", icon = icon("equalizer",lib='glyphicon'))),
@@ -231,6 +230,7 @@ body <- dashboardBody(
                         title = "Daten",
                         id = "tab_overview_data", height = "300px",
                         tabPanel("Service Rating ~ Food Rating", plotOutput("rating_lm")),
+                        tabPanel("Geo Locations", leafletOutput("shared_location_leaflet"),),
                         tabPanel("Anzahl der Restaurants je Küche", plotOutput("count_cuisine")),
                         width = 6,
                         side = "right",
@@ -245,31 +245,6 @@ body <- dashboardBody(
                         side = "right",
                         selected = "Accuracy Rating"
                     ),
-                ),
-        ),
-        tabItem(tabName = "data_overview",
-                h2("Data Overview"),
-                fluidRow(
-                    column(width = 12,
-                           box(title = "Beschreibung", 
-                               status = "success", 
-                               solidHeader = FALSE,
-                               width = 2.4,
-                               "In den untenstehenden Grafiken befinden sich ausgewählte Überblicke über die jeweiligen Datengruppen.", br(), br(),
-                               "Unter 'Geo Locations' befindet sich eine Map in der alle Kunden und Restaurants eingezeichnet sind. In dem Tab 'Restaurant'
-                               wird veranschaulicht welche Angebote die einzelnen Küchen der Bereiche Alkohol, Rauchen und Preis haben.
-                               Unter 'Kunden' befindet sich eine Diagramm, welches die das Budget mit dem Trinkverhalten in Verbindung setzt.
-                               In dem Tab 'Rating' befindet sich eine Veranschaulichung der Beziehung von Food-Rating und Service-Rating in anbetracht der verschiedenen Küchen."),
-                           tabBox(
-                               title = "Daten",
-                               id = "tab_overview_data", height = "500px",
-                               tabPanel("Geo Locations", leafletOutput("shared_location_leaflet"),),
-                               tabPanel("Restaurant", plotOutput("restaurant_ballon")),
-                               tabPanel("Kunden", plotOutput("kunden_drinking_budget")),
-                               tabPanel("Rating", plotOutput("rating_overview_grouped_cuisine")),
-                               width = 2.4
-                            ),
-                    )
                 ),
         ),
         tabItem(tabName = "restaurant",
@@ -293,7 +268,7 @@ body <- dashboardBody(
                     box(
                         title = "Filter Optionen", 
                         status = "success",
-                        selectInput("select_dia_restaurant", "Diagramm Möglichkeiten", c("Verteilung-Cuisines", "Parking-Optionen", "Preisklassen"), selected = "Verteilung-Cuisines", multiple = FALSE,
+                        selectInput("select_dia_restaurant", "Diagramm Möglichkeiten", c("Verteilung-Cuisines", "Parking-Optionen", "Preisklassen", "Overview"), selected = "Verteilung-Cuisines", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
                         selectInput("select_cuisine_restaurant", "Cuisine (Außer bei Verteilung-Cuisines)", c("Alle", "Persian","American", "Asian","International", "South_American", "European", "African"), selected = "Alle", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL)
@@ -361,7 +336,7 @@ body <- dashboardBody(
                     box(
                         title = "Filter Optionen", 
                         status = "success",
-                        selectInput("select_dia_rating", "Diagramm Möglichkeiten", c("Rating-Alter-Cuisine", "Rating-Preisklasse", "Rating-Cuisine"), selected = "Rating-Alter-Cuisine", multiple = FALSE,
+                        selectInput("select_dia_rating", "Diagramm Möglichkeiten", c("Rating-Food-Service", "Rating-Alter-Cuisine", "Rating-Preisklasse", "Rating-Cuisine"), selected = "Rating-Food-Service", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
                         selectInput("select_cuisine_rating", "Cuisine", c("Alle", "Persian","American", "Asian","International", "South_American", "European", "African"), selected = "Alle", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL)
@@ -433,13 +408,16 @@ body <- dashboardBody(
                         title = "Methoden Vergleich (Train)",
                         status = "primary",
                         collapsible = TRUE, 
-                        tableOutput("pred_rating_table_methods_train")
+                        div(style = 'overflow-x: scroll', tableOutput('pred_rating_table_methods_train')),
+                        width = 4,
+                        
                     ),
                     box(
                         title = "Predicting Rating",
                         status = "primary", 
                         collapsible = TRUE,
-                        plotOutput("acc_pred_train_rating")
+                        plotOutput("acc_pred_train_rating"),
+                        width = 8
                     ) 
                 ),
                 fluidRow(
@@ -447,13 +425,15 @@ body <- dashboardBody(
                         title = "Methoden Vergleich (Test)",
                         status = "primary",
                         collapsible = TRUE, 
-                        tableOutput("pred_rating_table_methods_test")
+                        div(style = 'overflow-x: scroll', tableOutput('pred_rating_table_methods_test')),
+                        width = 4
                     ),
                     box(
                         title = "Predicting Rating",
                         status = "primary", 
                         collapsible = TRUE,
-                        plotOutput("acc_pred_test_rating")
+                        plotOutput("acc_pred_test_rating"),
+                        width = 8
                     ) 
                 ),
         ),
@@ -481,14 +461,16 @@ body <- dashboardBody(
                     box(
                         title = "Methoden Vergleich (Train)",
                         status = "primary",
-                        collapsible = TRUE, 
-                        tableOutput("pred_cuisine_table_methods_train")
+                        collapsible = TRUE,
+                        div(style = 'overflow-x: scroll', tableOutput('pred_cuisine_table_methods_train')),
+                        width = 4
                     ),
                     box(
                         title = "Predicting Cuisine (Train)",
                         status = "primary", 
                         collapsible = TRUE,
-                        plotOutput("acc_pred_train_cuisine")
+                        plotOutput("acc_pred_train_cuisine"),
+                        width = 8
                     ) 
                 ),
                 fluidRow(
@@ -496,13 +478,15 @@ body <- dashboardBody(
                         title = "Methoden Vergleich (Test)",
                         status = "primary",
                         collapsible = TRUE, 
-                        tableOutput("pred_cuisine_table_methods_test")
+                        div(style = 'overflow-x: scroll', tableOutput('pred_cuisine_table_methods_test')),
+                        width = 4
                     ),
                     box(
                         title = "Predicting Cuisine",
                         status = "primary", 
                         collapsible = TRUE,
-                        plotOutput("acc_pred_test_cuisine")
+                        plotOutput("acc_pred_test_cuisine"),
+                        width = 8
                     ) 
                 ),
         )
@@ -623,10 +607,10 @@ server <- function(input, output) {
     
     output$ml_method_rating <- renderValueBox({
         valueBox(
-            formatC(nrow(userprofile), format="d", big.mark=','),
-            paste('Datensätze (User)'),
+            formatC(2, format="d", big.mark=','),
+            paste('Modelle'),
             # paste('Datensätze (User):',rating$rating),
-            icon = icon("list",lib='glyphicon'),
+            icon = icon("link",lib='glyphicon'),
             color = "yellow")
     })
     
@@ -645,29 +629,6 @@ server <- function(input, output) {
     
     output$overview_pred_cuisine <- renderPlot({
         plot(plot_pred_cuisine_table_test)
-    })
-    
-    # Daten Overview Tab
-    output$shared_location_leaflet <- renderLeaflet({
-        leaflet() %>%
-            addTiles() %>%  # Add default OpenStreetMap map tiles
-            addMarkers(lng=userprofile$longitude, lat=userprofile$latitude, popup=userprofile$userID, icon = customers) %>% 
-            addMarkers(lng = geoplaces$longitude, lat = geoplaces$latitude, icon = restaurants, popup = geoplaces$name)
-    })
-    
-    output$restaurant_ballon <- renderPlot({
-        balloonplot(t(balloonplot_data_restaurant), main ="Distribution Smoking, Alcohol, Pricing Grouped By the Cuisines", xlab ="", ylab="",
-                    label = FALSE, show.margins = FALSE, colsrt=90, rowmar=5, colmar=10)
-    })
-    
-    output$kunden_drinking_budget <- renderPlot({
-        ggplot(user_detail) + geom_mosaic(aes(product(drink_level,budget), fill = drink_level)) +
-            ggtitle("Distribution Drinking Level ~ Budget")
-    })
-    
-    output$rating_overview_grouped_cuisine <- renderPlot({
-        ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +  
-            geom_smooth(method = "lm", se=F) + ggtitle("Relation Food Rating and Service Rating Grouped By Cuisine")
     })
     
     # Daten Restaurant Tab
@@ -735,7 +696,11 @@ server <- function(input, output) {
             if(req(input$select_cuisine_restaurant) == "Alle") {print(
                 ggplot(detailed_price, aes(x = price, fill=price)) + geom_bar() + facet_wrap(.~Rcuisine)
             )}
-        }  
+        }
+        if(input$select_dia_restaurant == "Overview"){
+            balloonplot(t(balloonplot_data_restaurant), main ="Distribution Smoking, Alcohol, Pricing Grouped By the Cuisines", xlab ="", ylab="",
+                        label = FALSE, show.margins = FALSE, colsrt=90, rowmar=5, colmar=10)
+        }
     })
     
     # User Daten Tab
@@ -853,7 +818,11 @@ server <- function(input, output) {
         }  
         if (input$select_dia_rating == "Rating-Cuisine")  {
             ggplot(rating_detailed_grouped, aes(Rcuisine, fill=rating)) + geom_bar()
-        }  
+        }
+        if (input$select_dia_rating == "Rating-Food-Service"){
+            ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +  
+                geom_smooth(method = "lm", se=F) + ggtitle("Relation Food Rating and Service Rating Grouped By Cuisine")
+        }
     })
     
     # Prediction Overview
