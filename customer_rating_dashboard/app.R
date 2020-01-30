@@ -623,6 +623,13 @@ server <- function(input, output) {
         ggplot(usercuisine, aes(x = Rcuisine, fill=Rcuisine)) + geom_bar()
     })
     
+    output$shared_location_leaflet <- renderLeaflet({
+        leaflet() %>%
+            addTiles() %>%  # Add default OpenStreetMap map tiles
+            addMarkers(lng=userprofile$longitude, lat=userprofile$latitude, popup=userprofile$userID, icon = customers) %>% 
+            addMarkers(lng = geoplaces$longitude, lat = geoplaces$latitude, icon = restaurants, popup = geoplaces$name)
+    })
+    
     output$overview_pred_rating <- renderPlot({
         plot(plot_pred_rating_table_test)
     })

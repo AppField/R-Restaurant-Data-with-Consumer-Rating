@@ -1003,6 +1003,9 @@ Für das zweite Vorhersagemodell (Cuisine) ist das Naive Bayes Model zu wählen.
 siehe:
  * model.R
  * server.R
+ 
+Hinweis:
+Zum starten vom Server ist es notwendig im Ordner "API_Deployment" zu sein.
 
 ## Kurzpräsentation des Projekts/der Ergebnisse mittels Dashboard [10%]
 
