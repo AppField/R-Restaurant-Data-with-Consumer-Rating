@@ -869,7 +869,6 @@ acc_3 <- c(cm_naive$byClass[3, "Balanced Accuracy"], cm_knn$byClass[3, "Balanced
 overall_acc <- c(cm_naive$overall["Accuracy"], cm_knn$overall["Accuracy"], cm_rf$overall["Accuracy"], cm_nnet$overall["Accuracy"], cm_nnet$overall["Accuracy"])
 
 comp_all = data.frame(colnames, spec_1, spec_2, spec_3, prec_1, prec_2, prec_3, f1_1, f1_2, f1_3, acc_1, acc_2, acc_3)
-comp_all
 
 comp_spec = data.frame(colnames, spec_1, spec_2, spec_3)
 colnames(comp_spec) <- c("Model", "Specificity Class-1", "Specificity Class-2", "Specificity Class-3")
@@ -894,26 +893,31 @@ Overall Accuracy:
 ```{r}
 plot(comp_all_acc)
 ```
+Im Diagramm ist deutlich zu sehen, dass KNN und Random Forest die höchste Overall Accuracy haben.
 
 Specification:
 ```{r}
 comp_spec
 ```
+Über alle 3 Klassen gesehen ist ersichtlich, dass NNET, KNN und Random Forest eine fasst gleich gute Specificity haben. Von diesen Top 3 hat das NNET Modell die schlechteste Specificity.
 
 Recall:
 ```{r}
 comp_rec
 ```
+Ähnlich wie bei der Specification haben auch hier KNN und Random Forest annäherend gleiche Werte. Vergleicht man diese mit den anderen Methoden haben diese zwei die besten Werte.
 
 Precision:
 ```{r}
 comp_prec
 ```
+Wie auch bei den Werten davor haben auch hier KNN und Random Forest die beste Precision. RPart kann da auch mithalten. Aufgrund des deutlich höheren Precision in der Class 1, die die anderen Modelle n den anderen Klassen nicht ausgleicht, hat Random Forest die beste Precision.
 
 F1-Value:
 ```{r}
 comp_f1
 ```
+Über die Klassen hinweg hat auch hier Random Forest im Vergleich den besten F1-Value.
 
 #### Generalization error: Cuisine Modelle
 
