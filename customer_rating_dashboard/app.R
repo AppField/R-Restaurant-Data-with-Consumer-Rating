@@ -336,7 +336,7 @@ body <- dashboardBody(
                     box(
                         title = "Filter Optionen", 
                         status = "success",
-                        selectInput("select_dia_rating", "Diagramm Möglichkeiten", c("Rating-Food-Service", "Rating-Alter-Cuisine", "Rating-Preisklasse", "Rating-Cuisine"), selected = "Rating-Food-Service", multiple = FALSE,
+                        selectInput("select_dia_rating", "Diagramm Möglichkeiten", c("Rating-Food-Service", "Rating-Alter-Cuisine", "Rating-Preisklasse"), selected = "Rating-Food-Service", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL),
                         selectInput("select_cuisine_rating", "Cuisine", c("Alle", "Persian","American", "Asian","International", "South_American", "European", "African"), selected = "Alle", multiple = FALSE,
                                     selectize = TRUE, width = NULL, size = NULL)
@@ -822,9 +822,6 @@ server <- function(input, output) {
             if(req(input$select_cuisine_rating) == "Alle") {print(
                 ggplot(rating_detailed_price, aes(rating, colour = price)) + geom_density() + facet_wrap(.~Rcuisine)
             )}
-        }  
-        if (input$select_dia_rating == "Rating-Cuisine")  {
-            ggplot(rating_detailed_grouped, aes(Rcuisine, fill=rating)) + geom_bar()
         }
         if (input$select_dia_rating == "Rating-Food-Service"){
             ggplot(rating_detailed) + aes(food_rating, service_rating, col = Rcuisine) +  
